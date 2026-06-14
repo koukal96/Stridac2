@@ -1,0 +1,14 @@
+{
+  "name": "Střídač",
+  "short_name": "Střídač",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "Logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
