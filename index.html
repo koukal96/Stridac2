@@ -6,7 +6,7 @@
     <title>Střídač - Profesionální platforma</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* DYNAMICKÉ PROMĚNNÉ PRO TMAVÝ A SVĚTLÝ REŽIM */
+        /* DYNAMICKÉ PROMĚNNÉ */
         :root {
             --primary: #f39c12;
             --success: #2ecc71;
@@ -16,7 +16,6 @@
             --premium-glow: 0 0 15px rgba(155, 89, 182, 0.6);
             --premium-grad: linear-gradient(135deg, #8e44ad, #d35400);
 
-            /* Výchozí Tmavý režim (Dark Mode) */
             --bg-main: #050505;
             --bg-glass: rgba(15, 15, 15, 0.95);
             --bg-card: rgba(255, 255, 255, 0.08);
@@ -71,7 +70,7 @@
         /* HLAVIČKA A MENU */
         .header { padding: 15px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; z-index: 50; position: relative; flex-shrink: 0; transition: 0.3s; }
         .menu-btn { color: var(--primary); font-size: 22px; cursor: pointer; width: 40px; }
-        .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--text-main); letter-spacing: 2px; }
+        .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; }
         
         .header-right { display: flex; align-items: center; gap: 15px; justify-content: flex-end; width: auto; }
         .trial-badge { background: rgba(46, 204, 113, 0.2); color: var(--success); border: 1px solid var(--success); font-size: 11px; padding: 4px 8px; border-radius: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
@@ -104,13 +103,16 @@
         .lock-screen { text-align: center; padding: 40px 20px; background: var(--bg-input); border-radius: 12px; border: 1px solid var(--primary); margin-top: 20px; }
         .lock-screen i { font-size: 50px; color: var(--primary); margin-bottom: 15px; }
         
-        .btn { padding: 15px; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; margin-bottom: 12px; cursor: pointer; text-align: center; color: #fff; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.1s, box-shadow 0.2s; }
+        .btn { padding: 15px; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; margin-bottom: 12px; cursor: pointer; text-align: center; color: #000; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.1s, box-shadow 0.2s; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--primary); color: #000; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
         .btn-locked { background: #333; color: var(--text-muted); border: 1px solid #555; }
         .btn-premium { background: var(--premium-grad); color: white; box-shadow: var(--premium-glow); border: none; }
         .btn-whatsapp { background: var(--whatsapp); color: #000; }
+        .btn-google { background: #fff; color: #333; }
+        .btn-apple { background: #111; color: #fff; border: 1px solid #333; }
+        .btn-success { background: var(--success); color: #000; }
         
         .input-dark { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); margin-bottom: 15px; font-size: 14px; outline: none; }
         .input-dark:focus { border-color: var(--primary); }
@@ -135,15 +137,21 @@
         .filter-box { background: var(--bg-input); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--primary); }
         .filter-box label { font-size: 12px; color: var(--primary); font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
-        /* Recenze UI */
+        /* Recenze a Hodnocení */
         .rating-stars { color: #f1c40f; font-size: 13px; display: inline-flex; align-items: center; gap: 3px; }
-        .rating-count { color: var(--text-muted); font-size: 11px; text-decoration: underline; margin-left: 5px; }
+        .rating-count { color: var(--text-muted); font-size: 11px; text-decoration: underline; margin-left: 5px; cursor: pointer; }
+        .rating-count:hover { color: var(--primary); }
+        .review-box { background: var(--bg-input); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary); }
 
-        /* Časová okna řidiče */
+        /* Časová okna */
         .time-slot { background: rgba(128,128,128,0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--success); margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
         .time-slot .del-btn { color: var(--danger); font-size: 12px; cursor: pointer; text-align: right; font-weight: bold; margin-bottom: -5px; }
 
-        /* BUDÍK NAČÍTÁNÍ + POZADÍ */
+        /* Přihlašovací a Onboarding karty */
+        .auth-container { background: var(--bg-card); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-top: 20px; }
+        .plan-card { border: 1px solid; border-radius: 12px; padding: 20px; margin-bottom: 15px; background: rgba(0,0,0,0.4); }
+
+        /* BUDÍK NAČÍTÁNÍ */
         #screen-loading { display: none; justify-content: center; align-items: center; flex-direction: column; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=600&auto=format&fit=crop'); background-size: cover; background-position: center; z-index: 100; }
         #screen-loading.active { display: flex; }
         .gauge-container { position: relative; width: 160px; height: 80px; overflow: hidden; margin-bottom: 20px; }
@@ -179,7 +187,7 @@
         
         <div id="menu-driver-items" style="display: none;">
             <div class="menu-item" onclick="switchTab('driver-jobs', this); toggleMenu();"><i class="fa-solid fa-map-location-dot"></i> Hledat Jízdy</div>
-            <div class="menu-item" onclick="switchTab('driver-profile', this); toggleMenu();"><i class="fa-solid fa-user-pen"></i> Můj Profil (Praxe a Dostupnost)</div>
+            <div class="menu-item" onclick="switchTab('driver-profile', this); toggleMenu();"><i class="fa-solid fa-user-pen"></i> Můj Profil (Praxe)</div>
         </div>
 
         <div id="menu-company-items" style="display: none;">
@@ -189,7 +197,7 @@
         </div>
 
         <div style="margin-top: auto; border-top: 1px solid var(--border-color);">
-            <div class="menu-item" onclick="navigate('screen-paywall'); toggleMenu();" style="color: var(--premium); font-weight: bold; text-shadow: 0 0 5px rgba(155,89,182,0.4);" id="menu-premium-btn">
+            <div class="menu-item" onclick="navigate('screen-paywall'); toggleMenu();" style="color: var(--premium); font-weight: bold;" id="menu-premium-btn">
                 <i class="fa-solid fa-crown"></i> Koupit Premium
             </div>
             <div class="menu-item" onclick="toggleTheme();">
@@ -210,28 +218,41 @@
 
     <div id="screen-loading" class="screen active">
         <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
-        <div style="font-size: 24px; font-weight: bold; letter-spacing: 3px; color: var(--primary); text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">STŘÍDAČ</div>
+        <div style="font-size: 24px; font-weight: bold; letter-spacing: 3px; color: var(--primary); text-transform: uppercase;">STŘÍDAČ</div>
     </div>
 
     <div id="screen-login" class="screen">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <i class="fa-solid fa-truck-fast" style="font-size: 60px; color: var(--primary); margin-bottom: 15px;"></i>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <i class="fa-solid fa-truck-fast" style="font-size: 50px; color: var(--primary); margin-bottom: 10px;"></i>
                 <h1 style="color: var(--primary); font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">Střídač</h1>
-                <p style="color: var(--text-muted);">Profi logistika & Transport</p>
+                <p style="color: var(--text-muted); font-size: 14px;">Profi logistika & Transport</p>
             </div>
             
-            <div style="background: var(--bg-input); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
-                    <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-muted); cursor: pointer;">
-                        <input type="checkbox" id="legal-consent" style="margin-top: 3px;">
+            <div class="auth-container">
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 5px;">Vítejte v aplikaci</h2>
+                <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Najděte střídače nebo jízdu.</p>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-muted); cursor: pointer;">
+                        <input type="checkbox" id="legal-consent" style="margin-top: 2px;">
                         <span>Souhlasím s <a href="#" style="color: var(--primary); text-decoration: underline;">Podmínkami</a> a <a href="#" style="color: var(--primary); text-decoration: underline;">GDPR</a>.</span>
                     </label>
                 </div>
+
                 <input type="email" class="input-dark" placeholder="Váš E-mail" value="test@stridac.cz">
                 <input type="password" class="input-dark" placeholder="Heslo" value="123456">
+                
                 <button class="btn btn-primary" onclick="tryLogin()"><i class="fa-solid fa-envelope"></i> Přihlásit se</button>
+                
+                <div style="text-align: center; margin: 15px 0; color: #888; font-size: 11px; font-weight: bold; text-transform: uppercase;">Rychlé přihlášení</div>
+                
+                <button class="btn btn-whatsapp" onclick="tryLogin()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-google" onclick="tryLogin()"><i class="fa-brands fa-google"></i> Google</button>
+                    <button class="btn btn-apple" onclick="tryLogin()"><i class="fa-brands fa-apple"></i> Apple</button>
+                </div>
             </div>
         </div>
     </div>
@@ -239,9 +260,33 @@
     <div id="screen-role" class="screen">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
-            <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Vyberte režim</h1>
+            <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Kdo jste?</h1>
             <button class="btn btn-primary" style="padding: 20px; font-size: 18px;" onclick="chooseRole('driver')"><i class="fa-solid fa-steering-wheel"></i> JSEM ŘIDIČ</button>
-            <button class="btn btn-outline" style="padding: 20px; font-size: 18px; border-color: var(--text-main); color: var(--text-main);" onclick="chooseRole('company')"><i class="fa-solid fa-building"></i> JSEM FIRMA</button>
+            <button class="btn btn-outline" style="padding: 20px; font-size: 18px; border-color: #fff; color: #fff;" onclick="chooseRole('company')"><i class="fa-solid fa-building"></i> JSEM FIRMA</button>
+        </div>
+    </div>
+
+    <div id="screen-onboarding" class="screen">
+        <div class="bg-overlay"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px; z-index: 2;">
+            <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">Vyberte si plán</h1>
+            
+            <div class="plan-card" style="border-color: var(--success);" onclick="startTrial()">
+                <div style="text-align: center; color: var(--success); font-size: 14px;">14 dní na zkoušku</div>
+                <div style="font-size: 38px; font-weight: bold; text-align: center; margin: 5px 0; color: #fff;">Zdarma</div>
+                <ul style="font-size: 13px; color: #ccc; list-style: none; padding: 0; line-height: 1.8; margin-bottom: 15px;">
+                    <li><i class="fa-solid fa-check" style="color: var(--success); width: 20px;"></i> Vyzkoušení základních funkcí</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); width: 20px;"></i> Omezený přístup ke kontaktům</li>
+                </ul>
+                <button class="btn btn-success"><i class="fa-solid fa-play"></i> Spustit zdarma</button>
+            </div>
+
+            <div class="plan-card" style="border-color: var(--premium);" onclick="navigate('screen-checkout')">
+                <div style="text-align: center; color: var(--premium); font-size: 14px;">Premium účet</div>
+                <div style="font-size: 38px; font-weight: bold; text-align: center; margin: 5px 0; color: #fff;" id="onboarding-price">...</div>
+                <ul style="font-size: 13px; color: #ccc; list-style: none; padding: 0; line-height: 1.8; margin-bottom: 15px;" id="onboarding-benefits"></ul>
+                <button class="btn btn-premium"><i class="fa-solid fa-star"></i> Koupit Premium</button>
+            </div>
         </div>
     </div>
 
@@ -252,7 +297,7 @@
                 <div id="driver-jobs-locked" class="lock-screen" style="display: none;">
                     <i class="fa-solid fa-id-card"></i>
                     <h3>Profil není vyplněn</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Doplňte své oprávnění a praxi, aby se filtry mohly uplatnit.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Doplňte své oprávnění a praxi.</p>
                     <button class="btn btn-primary" onclick="switchTab('driver-profile')">Doplnit Profil</button>
                 </div>
                 
@@ -261,7 +306,7 @@
                         <label>Lokalita a dojezd</label>
                         <div style="position: relative;">
                             <i class="fa-solid fa-location-crosshairs" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
-                            <input type="text" id="filter-city" class="input-dark" value="Olomouc" oninput="renderJobs()" placeholder="Odkud..." style="padding-left: 40px;">
+                            <input type="text" id="filter-city" class="input-dark" value="Olomouc" oninput="renderJobs()" style="padding-left: 40px;">
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="filter-radius-val" style="color:var(--primary); font-weight:bold;">100 km</span></div>
                         <input type="range" id="filter-radius" min="0" max="500" value="100" oninput="document.getElementById('filter-radius-val').innerText = this.value + ' km'; renderJobs();">
@@ -274,7 +319,7 @@
                             <option value="Sklápěč">Sklápěč / Vana</option>
                             <option value="Sólo">Sólo (C)</option>
                             <option value="Dodávka">Dodávka (B)</option>
-                            <option value="Autobus">Autobus (D)</option>
+                            <option value="Autobus">Autobus (D, D+E)</option>
                         </select>
 
                         <label style="margin-top: 10px;">Minimální odměna a Frekvence</label>
@@ -296,6 +341,7 @@
                             <option value="C">C (Sólo)</option>
                             <option value="B">B (Dodávka)</option>
                             <option value="D">D (Autobus)</option>
+                            <option value="D+E">D+E (Bus s přívěsem)</option>
                         </select>
 
                         <label style="margin-top: 10px;">Vyžadované průkazy k zakázce</label>
@@ -303,7 +349,7 @@
                             <option value="Vše">Nezáleží</option>
                             <option value="Karta do tachografu">Karta do tachografu</option>
                             <option value="ADR">ADR</option>
-                            <option value="VZV">VZV (Ještěrka)</option>
+                            <option value="VZV">VZV</option>
                             <option value="Profesní průkaz">Profesní průkaz</option>
                         </select>
                     </div>
@@ -319,16 +365,16 @@
                     <input type="text" class="input-dark" value="+420 777 123 456" placeholder="Telefon">
                     <input type="text" class="input-dark" value="Olomouc" placeholder="Výchozí město">
                     
-                    <label style="font-size: 12px; color: var(--text-muted);">Jak mě mohou firmy kontaktovat?</label>
+                    <label style="font-size: 12px; color: var(--text-muted);">Jak mě mohou kontaktovat?</label>
                     <select class="input-dark" id="prof-drv-contact">
-                        <option value="whatsapp">Zobrazit WhatsApp (Nejrychlejší)</option>
-                        <option value="phone">Zobrazit telefonní číslo (Volání)</option>
-                        <option value="app">Pouze přes aplikaci (Číslo je skryté)</option>
+                        <option value="whatsapp">Zobrazit WhatsApp</option>
+                        <option value="phone">Zobrazit telefonní číslo</option>
+                        <option value="app">Pouze přes aplikaci (Skryté)</option>
                     </select>
 
                     <label style="font-size: 12px; color: var(--text-muted);">Délka praxe v oboru:</label>
                     <select class="input-dark" id="driver-exp">
-                        <option>Méně než 1 rok (Začátečník)</option>
+                        <option>Méně než 1 rok</option>
                         <option>1 - 3 roky</option>
                         <option>3 - 5 let</option>
                         <option selected>Více než 5 let (Zkušený)</option>
@@ -337,7 +383,7 @@
 
                 <div class="form-section">
                     <h3>Moje časová okna (Kdy mám volno)</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Pokud nevyplníte žádné okno, v katalogu pro firmy se nezobrazíte (jste skrytý).</p>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Bez časového okna jste pro firmy skrytý.</p>
                     <div id="driver-slots-container">
                         <div class="time-slot" id="slot-1">
                             <div class="del-btn" onclick="removeDriverSlot('slot-1')">✕ Smazat</div>
@@ -375,6 +421,8 @@
                 </div>
 
                 <button class="btn btn-primary" onclick="saveProfile('driver')"><i class="fa-solid fa-floppy-disk"></i> Uložit Profil</button>
+                
+                <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); margin-top: 15px;" onclick="simulateExpiry()"><i class="fa-solid fa-power-off"></i> TEST: Ukončit 14denní verzi</button>
             </div>
 
             <div id="tab-company-add" class="tab-content" style="padding: 20px;">
@@ -388,38 +436,28 @@
                     <h2 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Zadat Inzerát / Kšeft</h2>
                     <div class="form-section">
                         <h3>Trasa a Termín zakázky</h3>
-                        <select class="input-dark">
-                            <option>Záskok (Nemoc/Dovolená)</option>
-                            <option>Jednorázovka (Kšeft)</option>
-                            <option>Dlouhodobá spolupráce</option>
-                        </select>
-                        
-                        <label style="font-size: 12px; color: var(--text-muted);">Přesné místo výjezdu (Adresa garáží/sídla):</label>
-                        <div style="position: relative;">
-                            <i class="fa-solid fa-map-pin" style="position: absolute; left: 15px; top: 15px; color: var(--primary);"></i>
-                            <input type="text" class="input-dark" placeholder="Město, Ulice (např. Olomouc, Tovární 1)" style="padding-left: 40px;">
-                        </div>
-
+                        <select class="input-dark"><option>Záskok (Nemoc/Dovolená)</option><option>Jednorázovka (Kšeft)</option><option>Dlouhodobá spolupráce</option></select>
+                        <label style="font-size: 12px; color: var(--text-muted);">Přesné místo výjezdu:</label>
+                        <div style="position: relative;"><i class="fa-solid fa-map-pin" style="position: absolute; left: 15px; top: 15px; color: var(--primary);"></i><input type="text" class="input-dark" placeholder="Město, Ulice" style="padding-left: 40px;"></div>
                         <label style="font-size: 12px; color: var(--text-muted);">Cílová destinace:</label>
-                        <input type="text" class="input-dark" placeholder="Destinace (Např. Rakousko / AT, nebo Vnitro)">
-                        
+                        <input type="text" class="input-dark" placeholder="Např. Rakousko / AT">
                         <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Termín od (převzetí vozu):</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
-                            <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Termín do (návrat):</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
+                            <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Termín od:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
+                            <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Termín do:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
                         </div>
                     </div>
 
                     <div class="form-section">
-                        <h3>Co bude řídit? (Požadavky na řidiče)</h3>
+                        <h3>Požadavky na řidiče</h3>
                         <select class="input-dark">
-                            <option>Tahač + Návěs (Plachta/Mega) - Nutné C+E</option>
-                            <option>Tahač + Návěs (Frigo) - Nutné C+E</option>
-                            <option>Tahač + Návěs (Sklápěč) - Nutné C+E</option>
-                            <option>Sólo vozidlo - Nutné C</option>
-                            <option>Dodávka - Nutné B</option>
-                            <option>Autobus - Nutné D</option>
+                            <option>Tahač + Návěs (Plachta) - C+E</option>
+                            <option>Tahač + Návěs (Frigo) - C+E</option>
+                            <option>Tahač + Návěs (Sklápěč) - C+E</option>
+                            <option>Sólo vozidlo - C</option>
+                            <option>Dodávka - B</option>
+                            <option>Autobus - D</option>
+                            <option>Autobus s přívěsem - D+E</option>
                         </select>
-                        
                         <label style="font-size: 12px; color: var(--text-muted);">Vyžadované průkazy k jízdě:</label>
                         <div class="check-grid">
                             <label class="check-item"><input type="checkbox" checked> Karta do tachografu</label>
@@ -432,28 +470,13 @@
                     <div class="form-section">
                         <h3>Odměna a Podmínky</h3>
                         <div style="display: flex; gap: 10px;">
-                            <input type="number" class="input-dark" placeholder="Částka (např. 3000)" style="flex: 2;">
+                            <input type="number" class="input-dark" placeholder="Částka" style="flex: 2;">
                             <select class="input-dark" style="flex: 1;"><option>Kč</option><option>EUR</option></select>
                         </div>
-                        
                         <label style="font-size: 12px; color: var(--text-muted);">Frekvence odměny:</label>
-                        <select class="input-dark">
-                            <option>Za den (Denní taxa)</option>
-                            <option>Za úkol / jízdu</option>
-                            <option>Za točku (turnus)</option>
-                            <option>Měsíčně</option>
-                            <option>Za celý kontrakt</option>
-                        </select>
-
+                        <select class="input-dark"><option>Za den</option><option>Za točku</option><option>Měsíčně</option><option>Za celý kontrakt</option></select>
                         <label style="font-size: 12px; color: var(--text-muted);">Způsob úhrady / Smlouva:</label>
-                        <select class="input-dark">
-                            <option>Čistého (Na ruku / Dohoda)</option>
-                            <option>Hrubého (HPP)</option>
-                            <option>DPP</option>
-                            <option>DPČ</option>
-                            <option>Jiné (IČO / Faktura)</option>
-                        </select>
-                        
+                        <select class="input-dark"><option>Čistého</option><option>Hrubého (HPP)</option><option>DPP</option><option>DPČ</option><option>IČO / Faktura</option></select>
                         <div id="publish-btn-container" style="margin-top: 15px;"></div>
                     </div>
                 </div>
@@ -461,13 +484,12 @@
 
             <div id="tab-company-drivers" class="tab-content" style="padding: 20px;">
                 <div class="filter-box">
-                    <label>Najít střídače na konkrétní datum (Od - Do)</label>
+                    <label>Termín (Od - Do)</label>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <input type="date" class="input-dark" style="margin-bottom:0; flex:1;" id="comp-filter-date-from" onchange="renderDriversCatalog()">
                         <input type="date" class="input-dark" style="margin-bottom:0; flex:1;" id="comp-filter-date-to" onchange="renderDriversCatalog()">
                     </div>
-                    
-                    <label>Hledat v okolí (Město + Rádius)</label>
+                    <label>Město a Rádius</label>
                     <div style="position: relative;">
                         <i class="fa-solid fa-location-crosshairs" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
                         <input type="text" id="comp-filter-city" class="input-dark" value="Olomouc" oninput="renderDriversCatalog()" style="padding-left: 40px;">
@@ -482,9 +504,9 @@
                         <option value="C">Hledám na C</option>
                         <option value="B">Hledám na B (Dodávka)</option>
                         <option value="D">Hledám na D (Bus)</option>
+                        <option value="D+E">Hledám na D+E</option>
                     </select>
-
-                    <label>Nutné průkazy (Zobrazí jen ty, co ho mají)</label>
+                    <label style="margin-top: 10px;">Nutné průkazy</label>
                     <select class="input-dark" id="comp-filter-certs" onchange="renderDriversCatalog()">
                         <option value="Vše">Nezáleží</option>
                         <option value="Karta do tachografu">Karta do tachografu</option>
@@ -501,18 +523,46 @@
                     <h3>Fakturační údaje a Kontakt</h3>
                     <input type="text" class="input-dark" value="Control Point s.r.o." placeholder="Název firmy">
                     <input type="text" class="input-dark" value="CZ12345678" placeholder="IČO / DIČ">
-                    <input type="text" class="input-dark" value="+420 800 123 456" placeholder="Dispečink / Telefon">
+                    <input type="text" class="input-dark" value="+420 800 123 456" placeholder="Telefon">
                     
                     <label style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Jak vás mají střídači kontaktovat?</label>
                     <select class="input-dark" id="comp-prof-contact">
-                        <option value="whatsapp">Přes WhatsApp (Nejrychlejší)</option>
-                        <option value="phone">Zobrazit telefonní číslo (Volání)</option>
-                        <option value="app">Pouze přes aplikaci (Číslo je skryté)</option>
+                        <option value="whatsapp">Přes WhatsApp</option>
+                        <option value="phone">Zobrazit telefonní číslo</option>
+                        <option value="app">Pouze přes aplikaci</option>
                     </select>
                 </div>
                 <button class="btn btn-primary" onclick="saveProfile('company')"><i class="fa-solid fa-floppy-disk"></i> Uložit Profil</button>
+                <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); margin-top: 15px;" onclick="simulateExpiry()"><i class="fa-solid fa-power-off"></i> TEST: Ukončit 14denní verzi</button>
             </div>
 
+        </div>
+    </div>
+
+    <div id="screen-checkout" class="screen">
+        <div class="header" style="justify-content: flex-start; gap: 15px; background: transparent; border: none;">
+            <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
+        </div>
+        <div class="content" style="padding-top: 20px;">
+            <div style="background: var(--bg-card); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); box-shadow: var(--premium-glow);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                    <span style="font-weight: bold; font-size: 20px; color: var(--text-main);">Platba Premium</span>
+                    <i class="fa-solid fa-lock" style="color: var(--text-muted); font-size: 18px;"></i>
+                </div>
+                <div style="background: var(--bg-input); padding: 15px; border-radius: 6px; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border: 1px solid var(--border-color);">
+                    <i class="fa-regular fa-credit-card" style="color: var(--primary);"></i> 
+                    <input type="text" placeholder="Číslo karty (0000 0000...)" style="background: transparent; border: none; color: var(--text-main); width: 100%; outline: none; font-size: 16px;">
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div style="flex: 1; background: var(--bg-input); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <input type="text" placeholder="MM/YY" style="background: transparent; border: none; color: var(--text-main); width: 100%; outline: none; font-size: 16px;">
+                    </div>
+                    <div style="flex: 1; background: var(--bg-input); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <input type="password" placeholder="CVC" style="background: transparent; border: none; color: var(--text-main); width: 100%; outline: none; font-size: 16px;">
+                    </div>
+                </div>
+                <button class="btn btn-premium" style="margin-top: 25px;" onclick="processPayment(this)">Simulovat zaplacení (Test)</button>
+            </div>
         </div>
     </div>
 
@@ -527,7 +577,7 @@
             <div class="paywall-card" style="background: var(--bg-card); border: 2px solid var(--premium); border-radius: 15px; padding: 30px; box-shadow: var(--premium-glow);">
                 <h3 style="text-align: center; color: var(--text-main);" id="pw-title">Premium</h3>
                 <div style="font-size: 42px; font-weight: bold; color: var(--primary); margin: 20px 0; text-align: center;" id="pw-price">...</div>
-                <button class="btn btn-premium" style="margin-top: 10px;" onclick="processPayment(this)"><i class="fa-regular fa-credit-card"></i> Aktivovat Premium</button>
+                <button class="btn btn-premium" style="margin-top: 10px;" onclick="navigate('screen-checkout')"><i class="fa-regular fa-credit-card"></i> Přejít k platbě</button>
             </div>
         </div>
     </div>
@@ -551,23 +601,21 @@
         return 50; 
     }
 
-    // MOCK DATA: Rozšířeno o recenze (počet) a plně připravená data
     const companiesDB = {
-        'Control Point s.r.o.': { phone: '+420 777 123 456', contactPref: 'whatsapp', rating: '4.9', reviews: 24, about: 'Jsme stabilní dopravce v Olomouckém kraji.' },
-        'Dřevo Transport': { phone: '+420 600 111 222', contactPref: 'phone', rating: '4.5', reviews: 8, about: 'Specialisté na svoz dřeva, platíme včas.' },
-        'Speedy Express': { phone: '+420 800 000 000', contactPref: 'app', rating: '4.8', reviews: 15, about: 'Rychlá kurýrní služba pro Moravu.' }
+        'Control Point s.r.o.': { phone: '+420 777 123 456', contactPref: 'whatsapp', rating: '4.9', reviews: 24, about: 'Spolehlivá doprava.' },
+        'Dřevo Transport': { phone: '+420 600 111 222', contactPref: 'phone', rating: '4.5', reviews: 8, about: 'Svoz dřeva.' }
     };
 
     const driversDB = [
         { id: 'd1', name: 'Jan Koukal', rating: '4.9', reviews: 12, exp: 'Více než 5 let', loc: 'Olomouc', req: ['C+E', 'C', 'B'], certs: ['Karta do tachografu', 'Profesní průkaz', 'VZV', 'ADR'], phone: '+420 777 123 456', contactPref: 'whatsapp', slots: [{start: '2026-06-20', end: '2026-06-25'}] },
         { id: 'd2', name: 'Petr Novák', rating: '4.5', reviews: 3, exp: '1 - 3 roky', loc: 'Ostrava', req: ['B'], certs: [], phone: '+420 600 000 000', contactPref: 'phone', slots: [{start: '2026-07-01', end: '2026-07-10'}] },
-        { id: 'd3', name: 'Tomáš Skrytý', rating: '4.8', reviews: 5, exp: 'Více než 5 let', loc: 'Brno', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], phone: '+420 111 222 333', contactPref: 'app', slots: [] }
+        { id: 'd3', name: 'Karel Říha', rating: '4.8', reviews: 5, exp: 'Více než 5 let', loc: 'Brno', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], phone: '+420 111 222 333', contactPref: 'app', slots: [{start: '2026-06-21', end: '2026-06-22'}] }
     ];
 
     let jobsData = [
-        { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', from: 'Olomouc, Tovární 15', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého', dateFrom: '20.06.2026 06:00', dateTo: '25.06.2026 18:00' },
+        { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', from: 'Olomouc, Tovární 1', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého', dateFrom: '20.06.2026 06:00', dateTo: '25.06.2026 18:00' },
         { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', from: 'Šumperk, Pila Jih', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP', dateFrom: 'Zítra 05:00', dateTo: 'Zítra 20:00' },
-        { id: 3, compName: 'Speedy Express', type: 'Dlouhodobá', from: 'Brno, Vídeňská 100', to: 'Rozvoz Morava', vehicleFilter: 'Dodávka', vehicleTxt: 'Dodávka Skříň', req: ['B'], certs: [], priceVal: 45000, priceTxt: '45 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: 'Od 1.7.2026 07:00', dateTo: 'Neurčito' }
+        { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: 'Od 1.7.2026', dateTo: 'Neurčito' }
     ];
 
     function toggleTheme() {
@@ -579,6 +627,22 @@
     function openNotifications() {
         document.getElementById('bell-badge').style.display = 'none';
         openModal(`<h2 style="color:var(--primary); margin-bottom: 20px;"><i class="fa-regular fa-bell"></i> Upozornění</h2><div style="background: var(--bg-card); padding: 15px; border-radius: 8px;">Žádné nové zprávy.</div>`);
+    }
+
+    function showReviews(name) {
+        openModal(`
+            <h2 style="color:var(--primary); margin-bottom: 10px;">Recenze: ${name}</h2>
+            <div class="review-box">
+                <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <div style="font-size: 13px; margin-top: 5px;">"Spolehlivý, dorazil včas a komunikace bez problému."</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Agro Trans (Před měsícem)</div>
+            </div>
+            <div class="review-box">
+                <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                <div style="font-size: 13px; margin-top: 5px;">"Vše v pořádku, auto předáno umyté."</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Dřevo Transport (Před 2 měsíci)</div>
+            </div>
+        `);
     }
 
     function updateTrialBadge() {
@@ -602,13 +666,11 @@
         
         const head = document.getElementById('main-header');
         
-        if(scr === 'screen-loading' || scr === 'screen-login' || scr === 'screen-role') { 
+        if(scr === 'screen-loading' || scr === 'screen-login' || scr === 'screen-role' || scr === 'screen-onboarding') { 
             head.style.display = 'none'; 
         } else {
             head.style.display = 'flex';
-            if(scr === 'screen-app') { 
-                updateTrialBadge();
-            } 
+            if(scr === 'screen-app') updateTrialBadge();
         }
     }
 
@@ -620,27 +682,36 @@
         navigate('screen-role'); 
     }
 
-    function logoutApp() {
-        isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = false;
-        document.getElementById('legal-consent').checked = false;
-        document.getElementById('menu-premium-btn').style.display = 'flex';
-        toggleMenu(); navigate('screen-login');
-    }
-
     function chooseRole(r) {
         currentRole = r;
         document.getElementById('menu-driver-items').style.display = r === 'driver' ? 'block' : 'none';
         document.getElementById('menu-company-items').style.display = r === 'company' ? 'block' : 'none';
+        
+        document.getElementById('onboarding-price').innerHTML = r === 'driver' ? '79 Kč <span style="font-size:14px; color:gray;">/ měsíc</span>' : '990 Kč <span style="font-size:14px; color:gray;">/ měsíc</span>';
+        document.getElementById('onboarding-benefits').innerHTML = r === 'driver' ? '<li><i class="fa-solid fa-check" style="color:var(--success);"></i> Vidíte telefony na firmy</li><li><i class="fa-solid fa-check" style="color:var(--success);"></i> Neomezeně volných termínů</li>' : '<li><i class="fa-solid fa-check" style="color:var(--success);"></i> Odemčený katalog řidičů</li><li><i class="fa-solid fa-check" style="color:var(--success);"></i> Neomezené inzeráty</li>';
+        
         document.getElementById('pw-title').innerText = r === 'driver' ? 'Premium Řidič' : 'Premium Dopravce';
         document.getElementById('pw-price').innerText = r === 'driver' ? '79 Kč / měsíc' : '990 Kč / měsíc';
         
-        // Plynulý a bleskový vstup do appky bez zdržování
-        enterApp();
+        navigate('screen-onboarding');
     }
 
-    function enterApp() { 
-        switchTab(currentRole === 'driver' ? 'driver-jobs' : 'company-add'); 
-        navigate('screen-app'); 
+    function startTrial() {
+        isTrialActive = true; isPremium = false;
+        alert('Aktivována 14denní verze zdarma!'); 
+        enterApp(); 
+    }
+
+    function enterApp() { switchTab(currentRole === 'driver' ? 'driver-jobs' : 'company-add'); navigate('screen-app'); }
+
+    function simulateExpiry() { 
+        isTrialActive = false;
+        isPremium = false;
+        alert("Simulace: Zkušební verze vypršela. Funkce jsou nyní omezené."); 
+        updateTrialBadge();
+        if(currentRole === 'driver' && isProfileComplete) renderJobs(); 
+        if(currentRole === 'company' && isProfileComplete) { renderPublish(); renderDriversCatalog(); } 
+        navigate('screen-app');
     }
 
     function switchTab(id, menuEl = null) {
@@ -660,21 +731,12 @@
     }
 
     function addDriverSlot() {
+        if (!isTrialActive && !isPremium) { navigate('screen-paywall'); return; }
         slotCounter++;
-        const container = document.getElementById('driver-slots-container');
-        container.innerHTML += `
-            <div class="time-slot" id="slot-${slotCounter}">
-                <div class="del-btn" onclick="removeDriverSlot('slot-${slotCounter}')">✕ Smazat</div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Od kdy:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
-                    <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Do kdy:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div>
-                </div>
-            </div>`;
+        document.getElementById('driver-slots-container').innerHTML += `<div class="time-slot" id="slot-${slotCounter}"><div class="del-btn" onclick="removeDriverSlot('slot-${slotCounter}')">✕ Smazat</div><div style="display: flex; gap: 10px; align-items: center;"><div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Od kdy:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div><div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">Do kdy:</label><input type="datetime-local" class="input-dark" style="margin-bottom:0;"></div></div></div>`;
     }
     function removeDriverSlot(id) { document.getElementById(id).remove(); }
-
     function saveProfile(t) { isProfileComplete = true; alert('✅ Data uložena.'); switchTab(t === 'driver' ? 'driver-jobs' : 'company-add'); }
-
     function openModal(h) { document.getElementById('modal-body-content').innerHTML = h; document.getElementById('profile-modal').classList.add('active'); }
     function closeModal(e) { if(e === true || e.target.id === 'profile-modal') document.getElementById('profile-modal').classList.remove('active'); }
 
@@ -682,7 +744,6 @@
         const cont = document.getElementById('jobs-list');
         const city = document.getElementById('filter-city').value;
         const rad = parseInt(document.getElementById('filter-radius').value);
-        
         const vehFilter = document.getElementById('filter-vehicle-type').value;
         const reqFilter = document.getElementById('filter-job-req').value;
         const certsFilter = document.getElementById('filter-job-certs').value;
@@ -706,30 +767,22 @@
             if(freqFilter !== 'Vše' && j.priceFreq !== freqFilter) return;
 
             found = true;
-
             cont.innerHTML += `
                 <div class="card" onclick="showJobDetail(${j.id})">
                     <div style="font-size:16px;font-weight:bold;color:var(--primary);">${j.compName} <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
-                    <div style="font-size:13px;margin:3px 0 8px 0;">
-                        ${j.type} | <span class="rating-stars"><i class="fa-solid fa-star"></i> ${comp.rating}</span> <span class="rating-count">(${comp.reviews})</span>
-                    </div>
-                    
-                    <div style="background: rgba(243, 156, 18, 0.1); padding: 5px 8px; border-radius: 4px; border-left: 2px solid var(--primary); font-size: 11px; margin-bottom: 10px; color: var(--text-main);">
-                        🕒 <strong>Od:</strong> ${j.dateFrom} | <strong>Do:</strong> ${j.dateTo}
-                    </div>
-
+                    <div style="font-size:13px;margin:3px 0 8px 0;">${j.type} | <span class="rating-stars"><i class="fa-solid fa-star"></i> ${comp.rating}</span></div>
+                    <div style="background: rgba(243, 156, 18, 0.1); padding: 5px 8px; border-radius: 4px; border-left: 2px solid var(--primary); font-size: 11px; margin-bottom: 10px; color: var(--text-main);">🕒 <strong>Od:</strong> ${j.dateFrom} | <strong>Do:</strong> ${j.dateTo}</div>
                     <div class="route-box"><div><span style="color:var(--primary);">🅰️</span> ${cityNameOnly}</div><div style="color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i></div><div><span style="color:var(--danger);">🅱️</span> ${j.to}</div></div>
                     <div class="tag-grid"><span class="tag"><i class="fa-solid fa-truck"></i> ${j.vehicleTxt}</span><span class="tag alert">🪪 ${j.req.join(', ')}</span></div>
                     <div class="card-price">${j.priceTxt} <span style="font-size: 12px; font-weight: normal; color: var(--text-muted); display: block;">${j.priceFreq} | ${j.priceTax}</span></div>
                 </div>`;
         });
-
         if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Žádné jízdy neodpovídají filtrům. Zkuste slevit z požadavků.</div>`;
     }
 
     function showJobDetail(id) {
         const j = jobsData.find(x => x.id === id);
-        const comp = companiesDB[j.compName] || { phone: '+420 000 000 000', contactPref: 'app', rating: '4.0', reviews: 0, about: '' };
+        const comp = companiesDB[j.compName] || { phone: '+420 000 000 000', contactPref: 'app', rating: '4.0', reviews: 0 };
         
         let contactBtn = '';
         if (isTrialActive || isPremium) {
@@ -737,7 +790,8 @@
                 let cleanPhone = comp.phone.replace(/[^0-9]/g, ''); 
                 contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat firmě na WhatsApp</button>`;
             } else if (comp.contactPref === 'phone') {
-                contactBtn = `<button class="btn btn-outline" onclick="alert('Vytočte: ${comp.phone}')"><i class="fa-solid fa-phone"></i> Zavolat firmě: ${comp.phone}</button>`;
+                let cleanPhone = comp.phone.replace(/[^0-9+]/g, '');
+                contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat firmě: ${comp.phone}</button>`;
             } else {
                 contactBtn = `<button class="btn btn-primary" onclick="alert('Zájem odeslán přes aplikaci. Firma se ozve.')"><i class="fa-solid fa-paper-plane"></i> Poslat zájem o jízdu</button>`;
             }
@@ -749,29 +803,17 @@
 
         openModal(`
             <h2 style="color:var(--primary);text-align:center;">${j.compName}</h2>
-            <div style="text-align:center; margin-bottom: 20px; cursor: pointer;">
+            <div style="text-align:center; margin-bottom: 20px;" onclick="showReviews('${j.compName}')">
                 <span class="rating-stars" style="font-size: 15px;"><i class="fa-solid fa-star"></i> ${comp.rating}</span> 
                 <span class="rating-count" style="font-size: 13px;">(Číst ${comp.reviews} recenzí)</span>
             </div>
-            
             <div style="background:rgba(128,128,128,.1);padding:15px;border-radius:8px;margin-bottom:15px;">
-                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Přesné místo výjezdu (Garáže/Sídlo):</div>
-                <div style="font-size:14px;font-weight:bold;margin-bottom:15px;">📍 ${j.from}</div>
-                
-                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Destinace cesty:</div>
-                <div style="font-size:14px;font-weight:bold;margin-bottom:15px;">🏁 ${j.to}</div>
-
-                <div style="font-size:13px;color:var(--primary); margin-top:10px;">🕒 Od: <strong>${j.dateFrom}</strong></div>
-                <div style="font-size:13px;color:var(--primary);">🕒 Do: <strong>${j.dateTo}</strong></div>
-                
+                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Místo výjezdu:</div><div style="font-size:14px;font-weight:bold;margin-bottom:15px;">📍 ${j.from}</div>
+                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Destinace cesty:</div><div style="font-size:14px;font-weight:bold;margin-bottom:15px;">🏁 ${j.to}</div>
+                <div style="font-size:13px;color:var(--primary); margin-top:10px;">🕒 Od: <strong>${j.dateFrom}</strong></div><div style="font-size:13px;color:var(--primary);">🕒 Do: <strong>${j.dateTo}</strong></div>
                 <div style="font-size:13px;margin-top:15px;">Odměna: <strong style="color:var(--success);font-size:18px;">${j.priceTxt}</strong><br><span style="color:var(--text-muted);font-size:12px;">${j.priceFreq} | ${j.priceTax}</span></div>
             </div>
-            <div style="font-size:14px;line-height:1.8;margin-bottom:20px;">
-                🚛 Vozidlo: <strong>${j.vehicleTxt}</strong><br>
-                🪪 Řidičáky: <strong style="color:var(--primary);">${j.req.join(', ')}</strong><br>
-                📜 Průkazy: <strong>${certsStr}</strong>
-            </div>
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px; font-style:italic;">"${comp.about}"</div>
+            <div style="font-size:14px;line-height:1.8;margin-bottom:20px;">🚛 Vozidlo: <strong>${j.vehicleTxt}</strong><br>🪪 Řidičáky: <strong style="color:var(--primary);">${j.req.join(', ')}</strong><br>📜 Průkazy: <strong>${certsStr}</strong></div>
             ${contactBtn}`);
     }
 
@@ -788,37 +830,27 @@
         let found = false;
         driversDB.forEach(d => {
             if(d.slots.length === 0) return; 
-
             const dist = getDistance(cCity, d.loc); if(dist > rad) return; 
             if(reqF !== 'Vše' && !d.req.includes(reqF)) return; 
             if(certF !== 'Vše' && !d.certs.includes(certF)) return; 
 
             found = true;
-
             let contactIcon = '<i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i>';
             if(d.contactPref === 'phone') contactIcon = '<i class="fa-solid fa-phone" style="color:var(--primary)"></i>';
             if(d.contactPref === 'app') contactIcon = '<i class="fa-solid fa-envelope" style="color:var(--text-muted)"></i>';
 
-            let certsPreview = d.certs.length > 0 ? d.certs.join(', ') : 'Žádné spec. průkazy';
-
             cont.innerHTML += `
             <div class="card" onclick="showDriverProfile('${d.id}')">
                 <div style="font-size:16px;font-weight:bold;">${d.name} <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
-                
                 <div style="margin: 5px 0 10px 0; display:flex; align-items:center; justify-content:space-between;">
-                    <div><span class="rating-stars"><i class="fa-solid fa-star"></i> ${d.rating}</span> <span class="rating-count">(${d.reviews})</span></div>
+                    <div><span class="rating-stars"><i class="fa-solid fa-star"></i> ${d.rating}</span></div>
                     <div>${contactIcon}</div>
                 </div>
-
                 <div style="font-size: 12px; color: var(--text-muted);">Oprávnění: <strong style="color:var(--primary);">${d.req.join(', ')}</strong></div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top:3px; margin-bottom: 10px;">Průkazy: ${certsPreview}</div>
-                <div style="font-size: 11px; background: rgba(46, 204, 113, 0.1); border-left: 2px solid var(--success); padding: 4px; color: var(--text-main);">
-                    ✅ Má vložená volná okna k jízdě
-                </div>
+                <div style="font-size: 11px; background: rgba(46, 204, 113, 0.1); border-left: 2px solid var(--success); padding: 4px; color: var(--text-main); margin-top:10px;">✅ Má vložená volná okna k jízdě</div>
             </div>`;
         });
-
-        if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Žádný řidič s touto kombinací nenalezen.</div>`;
+        if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Žádný řidič nenalezen.</div>`;
     }
 
     function showDriverProfile(id) {
@@ -830,7 +862,8 @@
                 let cleanPhone = d.phone.replace(/[^0-9]/g, ''); 
                 contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat na WhatsApp</button>`;
             } else if (d.contactPref === 'phone') {
-                contactBtn = `<button class="btn btn-outline" onclick="alert('Vytočte: ${d.phone}')"><i class="fa-solid fa-phone"></i> Zavolat střídači: ${d.phone}</button>`;
+                let cleanPhone = d.phone.replace(/[^0-9+]/g, '');
+                contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat střídači: ${d.phone}</button>`;
             } else {
                 contactBtn = `<button class="btn btn-primary" onclick="alert('Poptávka odeslána přes aplikaci.')"><i class="fa-solid fa-envelope"></i> Poslat poptávku přes aplikaci</button>`;
             }
@@ -842,23 +875,22 @@
 
         openModal(`
             <h2 style="color:var(--primary);text-align:center;">${d.name}</h2>
-            <div style="text-align:center;margin-bottom:20px; cursor: pointer;">
+            <div style="text-align:center;margin-bottom:20px;" onclick="showReviews('${d.name}')">
                 <span class="rating-stars" style="font-size: 15px;"><i class="fa-solid fa-star"></i> ${d.rating}</span> 
                 <span class="rating-count" style="font-size: 13px;">(Číst ${d.reviews} recenzí)</span>
             </div>
-            
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Skupiny řidičáku:</strong> <span style="color:var(--primary);font-weight:bold;">${d.req.join(', ')}</span></div>
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Vlastní průkazy:</strong> <span style="color:var(--text-main);">${certsStr}</span></div>
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Dostupné termíny k jízdě:</strong> <span style="color:var(--success);font-weight:bold;">${d.slots.length} termínů</span></div>
-            
             <div style="margin-top: 25px;">${contactBtn}</div>
         `);
     }
 
     function renderPublish() { document.getElementById('publish-btn-container').innerHTML = (isTrialActive || isPremium) ? `<button class="btn btn-primary" onclick="alert('✅ Inzerát zveřejněn!'); switchTab('company-drivers');"><i class="fa-solid fa-upload"></i> Zveřejnit inzerát</button>` : `<button class="btn btn-premium" onclick="navigate('screen-paywall')"><i class="fa-solid fa-lock"></i> Zaplatit pro zveřejnění</button>`; }
+    function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = false; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
-    // RYCHLÝ START APLIKACE (budík trvá jen 1 sekundu pro lepší pocit plynulosti)
+    // RYCHLÝ START APLIKACE
     navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 1000);
 </script>
 </body>
