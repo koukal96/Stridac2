@@ -44,15 +44,15 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-body {
-    background-color: var(--bg-main);
-    background-image: url('IMG_8634.jpeg');
-    background-size: cover; 
-    background-position: 85% center; /* Ukáže čumák, který je na fotce vpravo */
-    /* Záměrně smazáno background-attachment, aby iPhone nezoomoval fotku! */
-    display: flex; justify-content: center; height: 100dvh; overflow: hidden; color: var(--text-main);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+
+        body {
+            background-color: var(--bg-main);
+            background-image: url('IMG_8634.jpeg');
+            background-size: cover; 
+            background-position: 85% center;
+            display: flex; justify-content: center; height: 100dvh; overflow: hidden; color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
         .app-container {
             width: 100%; max-width: 480px; height: 100dvh;
@@ -68,10 +68,13 @@ body {
 
         .bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-grad); z-index: -1; transition: background 0.3s ease; }
 
+        /* MINI LOGO V ROHU */
+        .corner-logo-mini { position: absolute; top: 15px; right: 15px; width: 35px; height: auto; z-index: 999; opacity: 0.85; pointer-events: none; }
+
         /* HLAVIČKA A MENU */
         .header { padding: 15px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; z-index: 50; position: relative; flex-shrink: 0; transition: 0.3s; }
         .menu-btn { color: var(--primary); font-size: 22px; cursor: pointer; width: 40px; }
-        .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; }
+        .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         .header-right { display: flex; align-items: center; gap: 15px; justify-content: flex-end; width: auto; }
         .trial-badge { background: rgba(46, 204, 113, 0.2); color: var(--success); border: 1px solid var(--success); font-size: 11px; padding: 4px 8px; border-radius: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
@@ -152,19 +155,27 @@ body {
         .auth-container { background: var(--bg-card); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-top: 20px; }
         .plan-card { border: 1px solid; border-radius: 12px; padding: 20px; margin-bottom: 15px; background: rgba(0,0,0,0.4); }
 
+        /* PROFILOVÁ FOTKA A MOJE RECENZE */
+        .profile-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+        .avatar-container { position: relative; margin-bottom: 15px; }
+        .avatar-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); background: var(--bg-input); }
+        .avatar-edit-btn { position: absolute; bottom: 0; right: 0; background: var(--primary); color: #000; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 3px solid var(--bg-sidebar); font-size: 14px; transition: transform 0.2s; }
+        .avatar-edit-btn:active { transform: scale(0.9); }
+        .my-reviews-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; text-align: center; width: 100%; }
+        .my-reviews-box .rating-stars { font-size: 18px; margin-bottom: 5px; }
+
         /* BUDÍK NAČÍTÁNÍ */
         #screen-loading { 
-    display: none; justify-content: center; align-items: center; flex-direction: column; 
-    /* Zesvětlený přechod, aby nebyl kamion tak tmavý (změněno na 0.3 a 0.6) */
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('IMG_8634.jpeg'); 
-    background-size: cover; 
-    background-position: 85% center; /* Musí být stejné jako u body, ať to neskáče */
-    z-index: 100; 
-}
+            display: none; justify-content: center; align-items: center; flex-direction: column; 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('IMG_8634.jpeg'); 
+            background-size: cover; 
+            background-position: 85% center; 
+            z-index: 100; 
+        }
         #screen-loading.active { display: flex; }
         .gauge-container { position: relative; width: 160px; height: 80px; overflow: hidden; margin-bottom: 20px; }
         .gauge-background { width: 160px; height: 160px; border-radius: 50%; border: 12px solid #222; border-top-color: var(--primary); border-right-color: var(--primary); position: absolute; top: 0; left: 0; transform: rotate(-45deg); box-shadow: 0 0 20px rgba(243, 156, 18, 0.5); }
-        .gauge-needle { width: 80px; height: 4px; background: #fff; position: absolute; bottom: 0; left: 0; transform-origin: right center; transform: rotate(0deg); animation: revUp 1.2s ease-in-out forwards; }
+        .gauge-needle { width: 80px; height: 4px; background: #fff; position: absolute; bottom: 0; left: 0; transform-origin: right center; transform: rotate(0deg); animation: revUp 2.5s ease-in-out forwards; }
         @keyframes revUp { 0% { transform: rotate(0deg); } 50% { transform: rotate(160deg); } 70% { transform: rotate(140deg); } 100% { transform: rotate(180deg); } }
     </style>
 </head>
@@ -174,7 +185,10 @@ body {
 
     <div class="header" id="main-header" style="display: none;">
         <div class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
-        <div class="header-title" id="header-title">STŘÍDAČ</div>
+        <div class="header-title" id="header-title">
+            <img src="logo.png" style="height: 24px; width: auto; vertical-align: middle; margin-top: -3px;" alt="logo">
+            STŘÍDAČ
+        </div>
         
         <div class="header-right">
             <div id="trial-badge" class="trial-badge" onclick="navigate('screen-paywall')">Zdarma (14)</div>
@@ -224,17 +238,19 @@ body {
         </div>
     </div>
 
-        <div id="screen-loading" class="screen active">
+    <div id="screen-loading" class="screen active">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
         <div style="font-size: 24px; font-weight: bold; letter-spacing: 3px; color: var(--primary); text-transform: uppercase;">STŘÍDAČ</div>
     </div>
 
     <div id="screen-login" class="screen">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 15px;">
             
             <div style="text-align: center; margin-bottom: 10px;">
-                <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 100%; height: auto; margin: 0 auto; display: block;">
+                <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
             </div>
             
             <div class="auth-container" style="padding: 20px; margin: 10px;">
@@ -264,8 +280,8 @@ body {
         </div>
     </div>
 
-
     <div id="screen-role" class="screen">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
             <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Kdo jste?</h1>
@@ -275,6 +291,7 @@ body {
     </div>
 
     <div id="screen-onboarding" class="screen">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px; z-index: 2;">
             <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">Vyberte si plán</h1>
@@ -366,7 +383,24 @@ body {
             </div>
 
             <div id="tab-driver-profile" class="tab-content" style="padding: 20px;">
-                <h2 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Můj Profil Řidiče</h2>
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Můj Profil Řidiče</h2>
+                
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <img src="https://ui-avatars.com/api/?name=Jan+Koukal&background=333&color=f39c12&size=150" id="driver-avatar-preview" class="avatar-img" alt="avatar">
+                        <div class="avatar-edit-btn" onclick="document.getElementById('driver-avatar-input').click()">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <input type="file" id="driver-avatar-input" accept="image/*" capture="camera" style="display: none;" onchange="previewImage(this, 'driver-avatar-preview')">
+                    </div>
+
+                    <div class="my-reviews-box">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;"><i class="fa-solid fa-lock" style="font-size: 10px;"></i> Veřejné hodnocení</div>
+                        <div class="rating-stars"><i class="fa-solid fa-star"></i> 4.9</div>
+                        <div class="rating-count" onclick="showReviews('Jan Koukal')">(Číst mých 12 recenzí)</div>
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <h3>Základní údaje a Preference</h3>
                     <input type="text" class="input-dark" value="Jan Koukal" placeholder="Jméno">
@@ -429,7 +463,6 @@ body {
                 </div>
 
                 <button class="btn btn-primary" onclick="saveProfile('driver')"><i class="fa-solid fa-floppy-disk"></i> Uložit Profil</button>
-                
                 <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); margin-top: 15px;" onclick="simulateExpiry()"><i class="fa-solid fa-power-off"></i> TEST: Ukončit 14denní verzi</button>
             </div>
 
@@ -526,7 +559,24 @@ body {
             </div>
 
             <div id="tab-company-profile" class="tab-content" style="padding: 20px;">
-                <h2 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Profil Dopravce</h2>
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Profil Dopravce</h2>
+
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <img src="https://ui-avatars.com/api/?name=Control+Point&background=333&color=f39c12&size=150" id="company-avatar-preview" class="avatar-img" alt="avatar">
+                        <div class="avatar-edit-btn" onclick="document.getElementById('company-avatar-input').click()">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <input type="file" id="company-avatar-input" accept="image/*" capture="camera" style="display: none;" onchange="previewImage(this, 'company-avatar-preview')">
+                    </div>
+
+                    <div class="my-reviews-box">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;"><i class="fa-solid fa-lock" style="font-size: 10px;"></i> Veřejné hodnocení firmy</div>
+                        <div class="rating-stars"><i class="fa-solid fa-star"></i> 4.9</div>
+                        <div class="rating-count" onclick="showReviews('Control Point s.r.o.')">(Číst 24 recenzí)</div>
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <h3>Fakturační údaje a Kontakt</h3>
                     <input type="text" class="input-dark" value="Control Point s.r.o." placeholder="Název firmy">
@@ -548,8 +598,9 @@ body {
     </div>
 
     <div id="screen-checkout" class="screen">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="header" style="justify-content: flex-start; gap: 15px; background: transparent; border: none;">
-            <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
+            <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
         </div>
         <div class="content" style="padding-top: 20px;">
             <div style="background: var(--bg-card); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); box-shadow: var(--premium-glow);">
@@ -575,8 +626,9 @@ body {
     </div>
 
     <div id="screen-paywall" class="screen">
+        <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="header" style="justify-content: flex-start; gap: 15px; background: transparent; border: none;">
-            <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
+            <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
         </div>
         <div class="content" style="padding-top: 20px;">
             <div style="text-align: center; font-size: 60px; color: var(--premium); margin-bottom: 10px; text-shadow: var(--premium-glow);"><i class="fa-solid fa-crown"></i></div>
@@ -625,6 +677,17 @@ body {
         { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', from: 'Šumperk, Pila Jih', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP', dateFrom: 'Zítra 05:00', dateTo: 'Zítra 20:00' },
         { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: 'Od 1.7.2026', dateTo: 'Neurčito' }
     ];
+
+    // Funkce pro náhled profilové fotky po vyfocení / nahrání
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(previewId).src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function toggleTheme() {
         isLightMode = !isLightMode;
@@ -898,8 +961,8 @@ body {
     function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = false; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
-    // RYCHLÝ START APLIKACE
-    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 3500);
+    // RYCHLÝ START APLIKACE (NASTAVENO NA 2,5 SEKUNDY)
+    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 2500);
 </script>
 </body>
 </html>
