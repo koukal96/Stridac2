@@ -68,10 +68,8 @@
 
         .bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-grad); z-index: -1; transition: background 0.3s ease; }
 
-        /* MINI LOGO V ROHU */
         .corner-logo-mini { position: absolute; top: 15px; right: 15px; width: 35px; height: auto; z-index: 999; opacity: 0.85; pointer-events: none; }
 
-        /* HLAVIČKA A MENU */
         .header { padding: 15px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; z-index: 50; position: relative; flex-shrink: 0; transition: 0.3s; }
         .menu-btn { color: var(--primary); font-size: 22px; cursor: pointer; width: 40px; }
         .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -120,6 +118,7 @@
         
         .input-dark { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); margin-bottom: 15px; font-size: 14px; outline: none; }
         .input-dark:focus { border-color: var(--primary); }
+        textarea.input-dark { resize: vertical; min-height: 60px; }
         select.input-dark { appearance: none; }
         input[type="range"] { width: 100%; accent-color: var(--primary); margin: 10px 0; }
         
@@ -136,26 +135,23 @@
         .tag-grid { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
         .tag { background: var(--bg-sidebar); padding: 4px 8px; border-radius: 4px; font-size: 11px; color: var(--text-main); border: 1px solid var(--border-color); }
         .tag.alert { border-color: var(--primary); color: var(--primary); }
+        .tag.region { background: rgba(155, 89, 182, 0.2); border-color: var(--premium); color: var(--text-main); }
         .card-price { color: var(--success); font-weight: bold; font-size: 18px; text-align: right; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
 
         .filter-box { background: var(--bg-input); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--primary); }
         .filter-box label { font-size: 12px; color: var(--primary); font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
-        /* Recenze a Hodnocení */
         .rating-stars { color: #f1c40f; font-size: 13px; display: inline-flex; align-items: center; gap: 3px; }
         .rating-count { color: var(--text-muted); font-size: 11px; text-decoration: underline; margin-left: 5px; cursor: pointer; }
         .rating-count:hover { color: var(--primary); }
         .review-box { background: var(--bg-input); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary); }
 
-        /* Časová okna */
         .time-slot { background: rgba(128,128,128,0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--success); margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
         .time-slot .del-btn { color: var(--danger); font-size: 12px; cursor: pointer; text-align: right; font-weight: bold; margin-bottom: -5px; }
 
-        /* Přihlašovací a Onboarding karty */
         .auth-container { background: var(--bg-card); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-top: 20px; }
         .plan-card { border: 1px solid; border-radius: 12px; padding: 20px; margin-bottom: 15px; background: rgba(0,0,0,0.4); }
 
-        /* PROFILOVÁ FOTKA A MOJE RECENZE */
         .profile-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
         .avatar-container { position: relative; margin-bottom: 15px; }
         .avatar-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); background: var(--bg-input); }
@@ -164,7 +160,6 @@
         .my-reviews-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; text-align: center; width: 100%; }
         .my-reviews-box .rating-stars { font-size: 18px; margin-bottom: 5px; }
 
-        /* BUDÍK NAČÍTÁNÍ */
         #screen-loading { 
             display: none; justify-content: center; align-items: center; flex-direction: column; 
             background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('IMG_8634.jpeg'); 
@@ -248,7 +243,6 @@
         <img src="logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 15px;">
-            
             <div style="text-align: center; margin-bottom: 10px;">
                 <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
             </div>
@@ -328,7 +322,14 @@
                 
                 <div id="driver-jobs-content">
                     <div class="filter-box">
-                        <label>Lokalita a dojezd</label>
+                        <label>Vnitro nebo MKD?</label>
+                        <select class="input-dark" id="filter-region" onchange="renderJobs()">
+                            <option value="Vše">Vše (Vnitro i MKD)</option>
+                            <option value="Vnitro">Pouze Vnitro (CZ, SK)</option>
+                            <option value="MKD">Pouze MKD (Zahraničí)</option>
+                        </select>
+
+                        <label style="margin-top: 10px;">Lokalita a dojezd</label>
                         <div style="position: relative;">
                             <i class="fa-solid fa-location-crosshairs" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
                             <input type="text" id="filter-city" class="input-dark" value="Olomouc" oninput="renderJobs()" style="padding-left: 40px;">
@@ -358,25 +359,6 @@
                                 <option value="Za celý kontrakt">Za kontrakt</option>
                             </select>
                         </div>
-
-                        <label style="margin-top: 15px;">Požadované řidičské oprávnění</label>
-                        <select class="input-dark" id="filter-job-req" onchange="renderJobs()">
-                            <option value="Vše">Nezáleží</option>
-                            <option value="C+E">C+E (Souprava)</option>
-                            <option value="C">C (Sólo)</option>
-                            <option value="B">B (Dodávka)</option>
-                            <option value="D">D (Autobus)</option>
-                            <option value="D+E">D+E (Bus s přívěsem)</option>
-                        </select>
-
-                        <label style="margin-top: 10px;">Vyžadované průkazy k zakázce</label>
-                        <select class="input-dark" id="filter-job-certs" onchange="renderJobs()">
-                            <option value="Vše">Nezáleží</option>
-                            <option value="Karta do tachografu">Karta do tachografu</option>
-                            <option value="ADR">ADR</option>
-                            <option value="VZV">VZV</option>
-                            <option value="Profesní průkaz">Profesní průkaz</option>
-                        </select>
                     </div>
                     <div id="jobs-list"></div>
                 </div>
@@ -402,10 +384,14 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>Základní údaje a Preference</h3>
-                    <input type="text" class="input-dark" value="Jan Koukal" placeholder="Jméno">
-                    <input type="text" class="input-dark" value="+420 777 123 456" placeholder="Telefon">
+                    <h3>Základní údaje a Status</h3>
+                    <input type="text" class="input-dark" value="Jan Koukal" placeholder="Jméno a Příjmení">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" class="input-dark" value="+420 777 123 456" placeholder="Telefon" style="flex: 1;">
+                        <input type="date" class="input-dark" id="driver-dob" value="1985-05-15" title="Datum narození" style="flex: 1;">
+                    </div>
                     <input type="text" class="input-dark" value="Olomouc" placeholder="Výchozí město">
+                    <textarea class="input-dark" placeholder="Krátké info o mně (např. spolehlivý, flexibilní, jezdím jen víkendy...)" rows="3">Spolehlivý řidič, nekuřák, hledám stabilní záskoky na víkendy.</textarea>
                     
                     <label style="font-size: 12px; color: var(--text-muted);">Jak mě mohou kontaktovat?</label>
                     <select class="input-dark" id="prof-drv-contact">
@@ -421,6 +407,14 @@
                         <option>3 - 5 let</option>
                         <option selected>Více než 5 let (Zkušený)</option>
                     </select>
+                </div>
+
+                <div class="form-section">
+                    <h3>Kde chci jezdit (Regiony)</h3>
+                    <div class="check-grid">
+                        <label class="check-item"><input type="checkbox" checked> Vnitro (CZ, SK)</label>
+                        <label class="check-item"><input type="checkbox" checked> MKD (Zahraničí)</label>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -477,7 +471,10 @@
                     <h2 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Zadat Inzerát / Kšeft</h2>
                     <div class="form-section">
                         <h3>Trasa a Termín zakázky</h3>
-                        <select class="input-dark"><option>Záskok (Nemoc/Dovolená)</option><option>Jednorázovka (Kšeft)</option><option>Dlouhodobá spolupráce</option></select>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <select class="input-dark" style="flex: 1; margin-bottom: 0;"><option>Záskok (Nemoc)</option><option>Jednorázovka</option><option>Dlouhodobá</option></select>
+                            <select class="input-dark" style="flex: 1; margin-bottom: 0;"><option>Vnitro</option><option>MKD</option></select>
+                        </div>
                         <label style="font-size: 12px; color: var(--text-muted);">Přesné místo výjezdu:</label>
                         <div style="position: relative;"><i class="fa-solid fa-map-pin" style="position: absolute; left: 15px; top: 15px; color: var(--primary);"></i><input type="text" class="input-dark" placeholder="Město, Ulice" style="padding-left: 40px;"></div>
                         <label style="font-size: 12px; color: var(--text-muted);">Cílová destinace:</label>
@@ -525,7 +522,14 @@
 
             <div id="tab-company-drivers" class="tab-content" style="padding: 20px;">
                 <div class="filter-box">
-                    <label>Termín (Od - Do)</label>
+                    <label>Region Jízdy</label>
+                    <select class="input-dark" id="comp-filter-region" onchange="renderDriversCatalog()">
+                        <option value="Vše">Nezáleží (Vnitro i MKD)</option>
+                        <option value="Vnitro">Chce jezdit Vnitro</option>
+                        <option value="MKD">Chce jezdit MKD</option>
+                    </select>
+
+                    <label style="margin-top: 10px;">Termín (Od - Do)</label>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <input type="date" class="input-dark" style="margin-bottom:0; flex:1;" id="comp-filter-date-from" onchange="renderDriversCatalog()">
                         <input type="date" class="input-dark" style="margin-bottom:0; flex:1;" id="comp-filter-date-to" onchange="renderDriversCatalog()">
@@ -546,13 +550,6 @@
                         <option value="B">Hledám na B (Dodávka)</option>
                         <option value="D">Hledám na D (Bus)</option>
                         <option value="D+E">Hledám na D+E</option>
-                    </select>
-                    <label style="margin-top: 10px;">Nutné průkazy</label>
-                    <select class="input-dark" id="comp-filter-certs" onchange="renderDriversCatalog()">
-                        <option value="Vše">Nezáleží</option>
-                        <option value="Karta do tachografu">Karta do tachografu</option>
-                        <option value="ADR">ADR průkaz</option>
-                        <option value="VZV">Průkaz VZV</option>
                     </select>
                 </div>
                 <div id="drivers-catalog-list"></div>
@@ -578,10 +575,11 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>Fakturační údaje a Kontakt</h3>
+                    <h3>Údaje a Status Firmy</h3>
                     <input type="text" class="input-dark" value="Control Point s.r.o." placeholder="Název firmy">
                     <input type="text" class="input-dark" value="CZ12345678" placeholder="IČO / DIČ">
                     <input type="text" class="input-dark" value="+420 800 123 456" placeholder="Telefon">
+                    <textarea class="input-dark" placeholder="Krátké info o firmě (např. stabilní zázemí, moderní vozový park...)" rows="3">Spolehlivá logistika, jezdíme převážně novými vozy Scania.</textarea>
                     
                     <label style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Jak vás mají střídači kontaktovat?</label>
                     <select class="input-dark" id="comp-prof-contact">
@@ -661,30 +659,37 @@
         return 50; 
     }
 
+    // Pomocná funkce pro výpočet věku z data narození
+    function getAge(dobString) {
+        let today = new Date();
+        let birthDate = new Date(dobString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
+        return age;
+    }
+
     const companiesDB = {
-        'Control Point s.r.o.': { phone: '+420 777 123 456', contactPref: 'whatsapp', rating: '4.9', reviews: 24, about: 'Spolehlivá doprava.' },
-        'Dřevo Transport': { phone: '+420 600 111 222', contactPref: 'phone', rating: '4.5', reviews: 8, about: 'Svoz dřeva.' }
+        'Control Point s.r.o.': { phone: '+420 777 123 456', contactPref: 'whatsapp', rating: '4.9', reviews: 24, bio: 'Spolehlivá logistika, jezdíme převážně novými vozy Scania.' },
+        'Dřevo Transport': { phone: '+420 600 111 222', contactPref: 'phone', rating: '4.5', reviews: 8, bio: 'Rodinná firma zaměřená na svoz dřeva. Férové jednání.' }
     };
 
     const driversDB = [
-        { id: 'd1', name: 'Jan Koukal', rating: '4.9', reviews: 12, exp: 'Více než 5 let', loc: 'Olomouc', req: ['C+E', 'C', 'B'], certs: ['Karta do tachografu', 'Profesní průkaz', 'VZV', 'ADR'], phone: '+420 777 123 456', contactPref: 'whatsapp', slots: [{start: '2026-06-20', end: '2026-06-25'}] },
-        { id: 'd2', name: 'Petr Novák', rating: '4.5', reviews: 3, exp: '1 - 3 roky', loc: 'Ostrava', req: ['B'], certs: [], phone: '+420 600 000 000', contactPref: 'phone', slots: [{start: '2026-07-01', end: '2026-07-10'}] },
-        { id: 'd3', name: 'Karel Říha', rating: '4.8', reviews: 5, exp: 'Více než 5 let', loc: 'Brno', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], phone: '+420 111 222 333', contactPref: 'app', slots: [{start: '2026-06-21', end: '2026-06-22'}] }
+        { id: 'd1', name: 'Jan Koukal', dob: '1985-05-15', bio: 'Spolehlivý řidič, nekuřák, hledám stabilní záskoky na víkendy.', rating: '4.9', reviews: 12, exp: 'Více než 5 let', loc: 'Olomouc', req: ['C+E', 'C', 'B'], certs: ['Karta do tachografu', 'Profesní průkaz', 'VZV', 'ADR'], region: ['Vnitro', 'MKD'], phone: '+420 777 123 456', contactPref: 'whatsapp', slots: [{start: '2026-06-20', end: '2026-06-25'}] },
+        { id: 'd2', name: 'Petr Novák', dob: '1992-10-20', bio: 'Jezdím hlavně dodávkou po ČR, občas SK.', rating: '4.5', reviews: 3, exp: '1 - 3 roky', loc: 'Ostrava', req: ['B'], certs: [], region: ['Vnitro'], phone: '+420 600 000 000', contactPref: 'phone', slots: [{start: '2026-07-01', end: '2026-07-10'}] },
+        { id: 'd3', name: 'Karel Říha', dob: '1978-02-11', bio: 'Dlouholetá praxe v autobusech po celé EU.', rating: '4.8', reviews: 5, exp: 'Více než 5 let', loc: 'Brno', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], region: ['MKD'], phone: '+420 111 222 333', contactPref: 'app', slots: [{start: '2026-06-21', end: '2026-06-22'}] }
     ];
 
     let jobsData = [
-        { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', from: 'Olomouc, Tovární 1', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého', dateFrom: '20.06.2026 06:00', dateTo: '25.06.2026 18:00' },
-        { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', from: 'Šumperk, Pila Jih', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP', dateFrom: 'Zítra 05:00', dateTo: 'Zítra 20:00' },
-        { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: 'Od 1.7.2026', dateTo: 'Neurčito' }
+        { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', region: 'MKD', from: 'Olomouc, Tovární 1', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého', dateFrom: '20.06.2026 06:00', dateTo: '25.06.2026 18:00' },
+        { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', region: 'Vnitro', from: 'Šumperk, Pila Jih', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP', dateFrom: 'Zítra 05:00', dateTo: 'Zítra 20:00' },
+        { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', region: 'MKD', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: 'Od 1.7.2026', dateTo: 'Neurčito' }
     ];
 
-    // Funkce pro náhled profilové fotky po vyfocení / nahrání
     function previewImage(input, previewId) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById(previewId).src = e.target.result;
-            }
+            reader.onload = function(e) { document.getElementById(previewId).src = e.target.result; }
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -705,13 +710,13 @@
             <h2 style="color:var(--primary); margin-bottom: 10px;">Recenze: ${name}</h2>
             <div class="review-box">
                 <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                <div style="font-size: 13px; margin-top: 5px;">"Spolehlivý, dorazil včas a komunikace bez problému."</div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Agro Trans (Před měsícem)</div>
+                <div style="font-size: 13px; margin-top: 5px;">"Spolehlivý, komunikace bez problému."</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Před měsícem</div>
             </div>
             <div class="review-box">
                 <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                <div style="font-size: 13px; margin-top: 5px;">"Vše v pořádku, auto předáno umyté."</div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Dřevo Transport (Před 2 měsíci)</div>
+                <div style="font-size: 13px; margin-top: 5px;">"Vše proběhlo přesně podle domluvy."</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Před 2 měsíci</div>
             </div>
         `);
     }
@@ -734,15 +739,8 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(scr).classList.add('active');
         if(!isBack && historyStack[historyStack.length-1] !== scr) historyStack.push(scr);
-        
         const head = document.getElementById('main-header');
-        
-        if(scr === 'screen-loading' || scr === 'screen-login' || scr === 'screen-role' || scr === 'screen-onboarding') { 
-            head.style.display = 'none'; 
-        } else {
-            head.style.display = 'flex';
-            if(scr === 'screen-app') updateTrialBadge();
-        }
+        if(scr === 'screen-loading' || scr === 'screen-login' || scr === 'screen-role' || scr === 'screen-onboarding') { head.style.display = 'none'; } else { head.style.display = 'flex'; if(scr === 'screen-app') updateTrialBadge(); }
     }
 
     function goBack() { if(historyStack.length > 1) { historyStack.pop(); navigate(historyStack[historyStack.length-1], true); } }
@@ -757,29 +755,18 @@
         currentRole = r;
         document.getElementById('menu-driver-items').style.display = r === 'driver' ? 'block' : 'none';
         document.getElementById('menu-company-items').style.display = r === 'company' ? 'block' : 'none';
-        
         document.getElementById('onboarding-price').innerHTML = r === 'driver' ? '79 Kč <span style="font-size:14px; color:gray;">/ měsíc</span>' : '990 Kč <span style="font-size:14px; color:gray;">/ měsíc</span>';
         document.getElementById('onboarding-benefits').innerHTML = r === 'driver' ? '<li><i class="fa-solid fa-check" style="color:var(--success);"></i> Vidíte telefony na firmy</li><li><i class="fa-solid fa-check" style="color:var(--success);"></i> Neomezeně volných termínů</li>' : '<li><i class="fa-solid fa-check" style="color:var(--success);"></i> Odemčený katalog řidičů</li><li><i class="fa-solid fa-check" style="color:var(--success);"></i> Neomezené inzeráty</li>';
-        
         document.getElementById('pw-title').innerText = r === 'driver' ? 'Premium Řidič' : 'Premium Dopravce';
         document.getElementById('pw-price').innerText = r === 'driver' ? '79 Kč / měsíc' : '990 Kč / měsíc';
-        
         navigate('screen-onboarding');
     }
 
-    function startTrial() {
-        isTrialActive = true; isPremium = false;
-        alert('Aktivována 14denní verze zdarma!'); 
-        enterApp(); 
-    }
-
+    function startTrial() { isTrialActive = true; isPremium = false; alert('Aktivována 14denní verze zdarma!'); enterApp(); }
     function enterApp() { switchTab(currentRole === 'driver' ? 'driver-jobs' : 'company-add'); navigate('screen-app'); }
 
     function simulateExpiry() { 
-        isTrialActive = false;
-        isPremium = false;
-        alert("Simulace: Zkušební verze vypršela. Funkce jsou nyní omezené."); 
-        updateTrialBadge();
+        isTrialActive = false; isPremium = false; alert("Simulace: Zkušební verze vypršela. Funkce jsou nyní omezené."); updateTrialBadge();
         if(currentRole === 'driver' && isProfileComplete) renderJobs(); 
         if(currentRole === 'company' && isProfileComplete) { renderPublish(); renderDriversCatalog(); } 
         navigate('screen-app');
@@ -790,14 +777,8 @@
         document.getElementById('tab-'+id).classList.add('active');
         if(menuEl) { document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active')); menuEl.classList.add('active'); }
         
-        if(id === 'driver-jobs') { 
-            if(!isProfileComplete) { document.getElementById('driver-jobs-locked').style.display = 'block'; document.getElementById('driver-jobs-content').style.display = 'none'; } 
-            else { document.getElementById('driver-jobs-locked').style.display = 'none'; document.getElementById('driver-jobs-content').style.display = 'block'; renderJobs(); } 
-        }
-        if(id === 'company-add') { 
-            if(!isProfileComplete) { document.getElementById('company-jobs-locked').style.display = 'block'; document.getElementById('company-jobs-content').style.display = 'none'; } 
-            else { document.getElementById('company-jobs-locked').style.display = 'none'; document.getElementById('company-jobs-content').style.display = 'block'; renderPublish(); } 
-        }
+        if(id === 'driver-jobs') { if(!isProfileComplete) { document.getElementById('driver-jobs-locked').style.display = 'block'; document.getElementById('driver-jobs-content').style.display = 'none'; } else { document.getElementById('driver-jobs-locked').style.display = 'none'; document.getElementById('driver-jobs-content').style.display = 'block'; renderJobs(); } }
+        if(id === 'company-add') { if(!isProfileComplete) { document.getElementById('company-jobs-locked').style.display = 'block'; document.getElementById('company-jobs-content').style.display = 'none'; } else { document.getElementById('company-jobs-locked').style.display = 'none'; document.getElementById('company-jobs-content').style.display = 'block'; renderPublish(); } }
         if(id === 'company-drivers') renderDriversCatalog();
     }
 
@@ -819,6 +800,7 @@
         const reqFilter = document.getElementById('filter-job-req').value;
         const certsFilter = document.getElementById('filter-job-certs').value;
         const minMoneyStr = document.getElementById('filter-min-money').value;
+        const regionFilter = document.getElementById('filter-region').value;
         const minMoney = minMoneyStr === '' ? 0 : parseInt(minMoneyStr);
         const freqFilter = document.getElementById('filter-money-freq').value;
 
@@ -831,6 +813,7 @@
             const comp = companiesDB[j.compName] || { rating: '4.0', reviews: 0 };
 
             if(dist > rad) return; 
+            if(regionFilter !== 'Vše' && j.region !== regionFilter) return;
             if(vehFilter !== 'Vše' && !j.vehicleFilter.includes(vehFilter)) return; 
             if(reqFilter !== 'Vše' && !j.req.includes(reqFilter)) return;
             if(certsFilter !== 'Vše' && (!j.certs || !j.certs.includes(certsFilter))) return;
@@ -844,7 +827,7 @@
                     <div style="font-size:13px;margin:3px 0 8px 0;">${j.type} | <span class="rating-stars"><i class="fa-solid fa-star"></i> ${comp.rating}</span></div>
                     <div style="background: rgba(243, 156, 18, 0.1); padding: 5px 8px; border-radius: 4px; border-left: 2px solid var(--primary); font-size: 11px; margin-bottom: 10px; color: var(--text-main);">🕒 <strong>Od:</strong> ${j.dateFrom} | <strong>Do:</strong> ${j.dateTo}</div>
                     <div class="route-box"><div><span style="color:var(--primary);">🅰️</span> ${cityNameOnly}</div><div style="color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i></div><div><span style="color:var(--danger);">🅱️</span> ${j.to}</div></div>
-                    <div class="tag-grid"><span class="tag"><i class="fa-solid fa-truck"></i> ${j.vehicleTxt}</span><span class="tag alert">🪪 ${j.req.join(', ')}</span></div>
+                    <div class="tag-grid"><span class="tag"><i class="fa-solid fa-truck"></i> ${j.vehicleTxt}</span><span class="tag alert">🪪 ${j.req.join(', ')}</span><span class="tag region">🌍 ${j.region}</span></div>
                     <div class="card-price">${j.priceTxt} <span style="font-size: 12px; font-weight: normal; color: var(--text-muted); display: block;">${j.priceFreq} | ${j.priceTax}</span></div>
                 </div>`;
         });
@@ -853,19 +836,13 @@
 
     function showJobDetail(id) {
         const j = jobsData.find(x => x.id === id);
-        const comp = companiesDB[j.compName] || { phone: '+420 000 000 000', contactPref: 'app', rating: '4.0', reviews: 0 };
+        const comp = companiesDB[j.compName] || { phone: '+420 000 000 000', contactPref: 'app', rating: '4.0', reviews: 0, bio: '' };
         
         let contactBtn = '';
         if (isTrialActive || isPremium) {
-            if (comp.contactPref === 'whatsapp') {
-                let cleanPhone = comp.phone.replace(/[^0-9]/g, ''); 
-                contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat firmě na WhatsApp</button>`;
-            } else if (comp.contactPref === 'phone') {
-                let cleanPhone = comp.phone.replace(/[^0-9+]/g, '');
-                contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat firmě: ${comp.phone}</button>`;
-            } else {
-                contactBtn = `<button class="btn btn-primary" onclick="alert('Zájem odeslán přes aplikaci. Firma se ozve.')"><i class="fa-solid fa-paper-plane"></i> Poslat zájem o jízdu</button>`;
-            }
+            if (comp.contactPref === 'whatsapp') { let cleanPhone = comp.phone.replace(/[^0-9]/g, ''); contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat firmě na WhatsApp</button>`; } 
+            else if (comp.contactPref === 'phone') { let cleanPhone = comp.phone.replace(/[^0-9+]/g, ''); contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat firmě: ${comp.phone}</button>`; } 
+            else { contactBtn = `<button class="btn btn-primary" onclick="alert('Zájem odeslán přes aplikaci. Firma se ozve.')"><i class="fa-solid fa-paper-plane"></i> Poslat zájem o jízdu</button>`; }
         } else {
             contactBtn = `<button class="btn btn-locked" onclick="navigate('screen-paywall');closeModal(true);"><i class="fa-solid fa-lock"></i> Odemknout kontakt na firmu</button>`;
         }
@@ -873,14 +850,15 @@
         let certsStr = (j.certs && j.certs.length > 0) ? j.certs.join(', ') : 'Nepotřebujete speciální průkazy';
 
         openModal(`
-            <h2 style="color:var(--primary);text-align:center;">${j.compName}</h2>
+            <h2 style="color:var(--primary);text-align:center; margin-bottom: 5px;">${j.compName}</h2>
+            <div style="text-align:center; font-size: 13px; color: var(--text-main); margin-bottom: 10px; font-style: italic;">"${comp.bio}"</div>
             <div style="text-align:center; margin-bottom: 20px;" onclick="showReviews('${j.compName}')">
                 <span class="rating-stars" style="font-size: 15px;"><i class="fa-solid fa-star"></i> ${comp.rating}</span> 
                 <span class="rating-count" style="font-size: 13px;">(Číst ${comp.reviews} recenzí)</span>
             </div>
             <div style="background:rgba(128,128,128,.1);padding:15px;border-radius:8px;margin-bottom:15px;">
                 <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Místo výjezdu:</div><div style="font-size:14px;font-weight:bold;margin-bottom:15px;">📍 ${j.from}</div>
-                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Destinace cesty:</div><div style="font-size:14px;font-weight:bold;margin-bottom:15px;">🏁 ${j.to}</div>
+                <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Destinace cesty: <span style="background: var(--premium); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle;">${j.region}</span></div><div style="font-size:14px;font-weight:bold;margin-bottom:15px;">🏁 ${j.to}</div>
                 <div style="font-size:13px;color:var(--primary); margin-top:10px;">🕒 Od: <strong>${j.dateFrom}</strong></div><div style="font-size:13px;color:var(--primary);">🕒 Do: <strong>${j.dateTo}</strong></div>
                 <div style="font-size:13px;margin-top:15px;">Odměna: <strong style="color:var(--success);font-size:18px;">${j.priceTxt}</strong><br><span style="color:var(--text-muted);font-size:12px;">${j.priceFreq} | ${j.priceTax}</span></div>
             </div>
@@ -897,6 +875,7 @@
         const rad = parseInt(document.getElementById('comp-filter-radius').value);
         const reqF = document.getElementById('comp-filter-req').value;
         const certF = document.getElementById('comp-filter-certs').value;
+        const regionF = document.getElementById('comp-filter-region').value;
 
         let found = false;
         driversDB.forEach(d => {
@@ -904,20 +883,24 @@
             const dist = getDistance(cCity, d.loc); if(dist > rad) return; 
             if(reqF !== 'Vše' && !d.req.includes(reqF)) return; 
             if(certF !== 'Vše' && !d.certs.includes(certF)) return; 
+            if(regionF !== 'Vše' && !d.region.includes(regionF)) return;
 
             found = true;
             let contactIcon = '<i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i>';
             if(d.contactPref === 'phone') contactIcon = '<i class="fa-solid fa-phone" style="color:var(--primary)"></i>';
             if(d.contactPref === 'app') contactIcon = '<i class="fa-solid fa-envelope" style="color:var(--text-muted)"></i>';
+            
+            let age = getAge(d.dob);
 
             cont.innerHTML += `
             <div class="card" onclick="showDriverProfile('${d.id}')">
-                <div style="font-size:16px;font-weight:bold;">${d.name} <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
+                <div style="font-size:16px;font-weight:bold;">${d.name} (${age} let) <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
                 <div style="margin: 5px 0 10px 0; display:flex; align-items:center; justify-content:space-between;">
                     <div><span class="rating-stars"><i class="fa-solid fa-star"></i> ${d.rating}</span></div>
                     <div>${contactIcon}</div>
                 </div>
-                <div style="font-size: 12px; color: var(--text-muted);">Oprávnění: <strong style="color:var(--primary);">${d.req.join(', ')}</strong></div>
+                <div style="font-size: 12px; color: var(--text-muted);">Region: <strong style="color:#fff;">${d.region.join(' + ')}</strong></div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Oprávnění: <strong style="color:var(--primary);">${d.req.join(', ')}</strong></div>
                 <div style="font-size: 11px; background: rgba(46, 204, 113, 0.1); border-left: 2px solid var(--success); padding: 4px; color: var(--text-main); margin-top:10px;">✅ Má vložená volná okna k jízdě</div>
             </div>`;
         });
@@ -929,27 +912,24 @@
         let contactBtn = '';
         
         if (isTrialActive || isPremium) {
-            if (d.contactPref === 'whatsapp') {
-                let cleanPhone = d.phone.replace(/[^0-9]/g, ''); 
-                contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat na WhatsApp</button>`;
-            } else if (d.contactPref === 'phone') {
-                let cleanPhone = d.phone.replace(/[^0-9+]/g, '');
-                contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat střídači: ${d.phone}</button>`;
-            } else {
-                contactBtn = `<button class="btn btn-primary" onclick="alert('Poptávka odeslána přes aplikaci.')"><i class="fa-solid fa-envelope"></i> Poslat poptávku přes aplikaci</button>`;
-            }
+            if (d.contactPref === 'whatsapp') { let cleanPhone = d.phone.replace(/[^0-9]/g, ''); contactBtn = `<button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${cleanPhone}', '_blank')"><i class="fa-brands fa-whatsapp"></i> Napsat na WhatsApp</button>`; } 
+            else if (d.contactPref === 'phone') { let cleanPhone = d.phone.replace(/[^0-9+]/g, ''); contactBtn = `<button class="btn btn-outline" onclick="window.location.href='tel:${cleanPhone}'"><i class="fa-solid fa-phone"></i> Zavolat střídači: ${d.phone}</button>`; } 
+            else { contactBtn = `<button class="btn btn-primary" onclick="alert('Poptávka odeslána přes aplikaci.')"><i class="fa-solid fa-envelope"></i> Poslat poptávku přes aplikaci</button>`; }
         } else {
             contactBtn = `<button class="btn btn-locked" onclick="navigate('screen-paywall');closeModal(true);"><i class="fa-solid fa-lock"></i> Odemknout kontakt (Premium)</button>`;
         }
 
         let certsStr = d.certs.length > 0 ? d.certs.join(', ') : 'Nepotřebuje';
+        let age = getAge(d.dob);
 
         openModal(`
-            <h2 style="color:var(--primary);text-align:center;">${d.name}</h2>
+            <h2 style="color:var(--primary);text-align:center; margin-bottom: 5px;">${d.name} (${age} let)</h2>
+            <div style="text-align:center; font-size: 13px; color: var(--text-main); margin-bottom: 10px; font-style: italic;">"${d.bio}"</div>
             <div style="text-align:center;margin-bottom:20px;" onclick="showReviews('${d.name}')">
                 <span class="rating-stars" style="font-size: 15px;"><i class="fa-solid fa-star"></i> ${d.rating}</span> 
                 <span class="rating-count" style="font-size: 13px;">(Číst ${d.reviews} recenzí)</span>
             </div>
+            <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Jezdí region:</strong> <span style="color:#fff;font-weight:bold;">${d.region.join(' i ')}</span></div>
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Skupiny řidičáku:</strong> <span style="color:var(--primary);font-weight:bold;">${d.req.join(', ')}</span></div>
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Vlastní průkazy:</strong> <span style="color:var(--text-main);">${certsStr}</span></div>
             <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Dostupné termíny k jízdě:</strong> <span style="color:var(--success);font-weight:bold;">${d.slots.length} termínů</span></div>
@@ -961,7 +941,6 @@
     function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = false; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
-    // RYCHLÝ START APLIKACE (NASTAVENO NA 2,5 SEKUNDY)
     navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 2500);
 </script>
 </body>
