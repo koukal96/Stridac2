@@ -24,7 +24,7 @@
             --bg-sidebar: #111111;
             --text-main: #f5f5f5;
             --text-muted: #aaaaaa;
-            --text-inverse: #111111;
+            --text-inverse: #ffffff;
             --border-color: rgba(255, 255, 255, 0.15);
             --overlay-grad: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.95) 80%);
             --header-bg: #000000;
@@ -38,8 +38,8 @@
             --bg-input: #ffffff;
             --bg-sidebar: #ffffff;
             --text-main: #1a1a1a;
-            --text-muted: #555555;
-            --text-inverse: #ffffff;
+            --text-muted: #666666;
+            --text-inverse: #1a1a1a;
             --border-color: rgba(0, 0, 0, 0.15);
             --overlay-grad: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, rgba(238,242,245,1) 80%);
             --header-bg: #ffffff;
@@ -75,8 +75,10 @@
         /* HLAVIČKA A MENU */
         .header { padding: 15px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; z-index: 50; position: relative; flex-shrink: 0; transition: 0.3s; }
         .menu-btn { color: var(--primary); font-size: 22px; cursor: pointer; width: 40px; }
-        .header-title { flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; }
-        .header-title img { height: 28px; width: auto; object-fit: contain; }
+        
+        .header-title { flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .header-title img { height: 35px; width: auto; object-fit: contain; }
+        .header-title span { font-size: 20px; font-weight: bold; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
         
         .header-right { display: flex; align-items: center; gap: 15px; justify-content: flex-end; width: auto; }
         .trial-badge { background: rgba(46, 204, 113, 0.2); color: var(--success); border: 1px solid var(--success); font-size: 11px; padding: 4px 8px; border-radius: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
@@ -113,7 +115,7 @@
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--primary); color: #000; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-        .btn-locked { background: var(--border-color); color: var(--text-muted); border: 1px solid var(--text-muted); }
+        .btn-locked { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-color); }
         .btn-premium { background: var(--premium-grad); color: white; box-shadow: var(--premium-glow); border: none; }
         .btn-whatsapp { background: var(--whatsapp); color: #000; }
         .btn-google { background: #fff; color: #333; border: 1px solid #ccc; }
@@ -185,7 +187,8 @@
     <div class="header" id="main-header" style="display: none;">
         <div class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
         <div class="header-title" id="header-title">
-            <img src="logo.png" alt="logo">
+            <img src="Logo.png" alt="Logo">
+            <span>STŘÍDAČ</span>
         </div>
         
         <div class="header-right">
@@ -207,6 +210,7 @@
         
         <div id="menu-driver-items" style="display: none;">
             <div class="menu-item" onclick="switchTab('driver-jobs', this); toggleMenu();"><i class="fa-solid fa-map-location-dot"></i> Hledat Jízdy</div>
+            <div class="menu-item" onclick="viewAllCompaniesAsDriver();"><i class="fa-solid fa-building"></i> Katalog firem <i class="fa-solid fa-crown" style="font-size: 12px; color: var(--premium); margin-left: auto;"></i></div>
             <div class="menu-item" onclick="switchTab('driver-profile', this); toggleMenu();"><i class="fa-solid fa-user-pen"></i> Můj Profil (Praxe)</div>
         </div>
 
@@ -238,16 +242,16 @@
     </div>
 
     <div id="screen-loading" class="screen active">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
     </div>
 
     <div id="screen-login" class="screen">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 15px;">
             <div style="text-align: center; margin-bottom: 10px;">
-                <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
+                <img src="logo_1.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
             </div>
             
             <div class="auth-container" style="padding: 20px; margin: 10px;">
@@ -278,7 +282,7 @@
     </div>
 
     <div id="screen-role" class="screen">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px;">
             <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Kdo jste?</h1>
@@ -288,7 +292,7 @@
     </div>
 
     <div id="screen-onboarding" class="screen">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px; z-index: 2;">
             <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">Vyberte si plán</h1>
@@ -337,8 +341,8 @@
                             <i class="fa-solid fa-location-crosshairs" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
                             <input type="text" id="filter-city" class="input-dark" value="Olomouc" oninput="renderJobs()" style="padding-left: 40px;">
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="filter-radius-val" style="color:var(--primary); font-weight:bold;">100 km</span></div>
-                        <input type="range" id="filter-radius" min="0" max="500" value="100" oninput="document.getElementById('filter-radius-val').innerText = this.value + ' km'; renderJobs();">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="filter-radius-val" style="color:var(--primary); font-weight:bold;">500 km</span></div>
+                        <input type="range" id="filter-radius" min="0" max="500" value="500" oninput="document.getElementById('filter-radius-val').innerText = this.value + ' km'; renderJobs();">
                         
                         <label style="margin-top: 10px;">Typ Vozidla / Nástavby</label>
                         <select class="input-dark" id="filter-vehicle-type" onchange="renderJobs()">
@@ -364,6 +368,12 @@
                     </div>
                     <div id="jobs-list"></div>
                 </div>
+            </div>
+
+            <div id="tab-driver-all-companies" class="tab-content" style="padding: 20px;">
+                <h2 style="color: var(--primary); margin-bottom: 10px;">Katalog všech firem</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">V premium verzi si můžete prohlížet a kontaktovat přímo všechny firmy v systému nezávisle na inzerátech.</p>
+                <div id="driver-all-companies-list"></div>
             </div>
 
             <div id="tab-driver-profile" class="tab-content" style="padding: 20px;">
@@ -393,7 +403,7 @@
                         <input type="date" class="input-dark" id="driver-dob" value="1985-05-15" title="Datum narození" style="flex: 1;">
                     </div>
                     <input type="text" class="input-dark" value="Olomouc" placeholder="Výchozí město">
-                    <textarea class="input-dark" placeholder="Krátké info o mně..." rows="3">Spolehlivý řidič, nekuřák, hledám stabilní záskoky.</textarea>
+                    <textarea class="input-dark" placeholder="Krátké info o mně..." rows="3">Spolehlivý řidič, nekuřák, hledám stabilní záskoky na víkendy.</textarea>
                     
                     <label style="font-size: 12px; color: var(--text-muted);">Jak mě mohou kontaktovat?</label>
                     <select class="input-dark" id="prof-drv-contact">
@@ -494,8 +504,8 @@
                         </div>
                         <label style="font-size: 12px; color: var(--text-muted);">Frekvence a úhrada:</label>
                         <div style="display: flex; gap: 10px;">
-                            <select class="input-dark" style="flex: 1;"><option>Za den</option><option>Za točku</option></select>
-                            <select class="input-dark" style="flex: 1;"><option>Čistého</option><option>IČO</option></select>
+                            <select class="input-dark" style="flex: 1;"><option>Za den</option><option>Za točku</option><option>Měsíčně</option></select>
+                            <select class="input-dark" style="flex: 1;"><option>Čistého</option><option>Hrubého</option><option>IČO</option></select>
                         </div>
                         <div id="publish-btn-container" style="margin-top: 15px;"></div>
                     </div>
@@ -516,8 +526,8 @@
                         <i class="fa-solid fa-location-crosshairs" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
                         <input type="text" id="comp-filter-city" class="input-dark" value="Olomouc" oninput="renderDriversCatalog()" style="padding-left: 40px;">
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="comp-filter-radius-val" style="color:var(--primary); font-weight:bold;">100 km</span></div>
-                    <input type="range" id="comp-filter-radius" min="0" max="500" value="100" oninput="document.getElementById('comp-filter-radius-val').innerText = this.value + ' km'; renderDriversCatalog();">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="comp-filter-radius-val" style="color:var(--primary); font-weight:bold;">500 km</span></div>
+                    <input type="range" id="comp-filter-radius" min="0" max="500" value="500" oninput="document.getElementById('comp-filter-radius-val').innerText = this.value + ' km'; renderDriversCatalog();">
 
                     <label style="margin-top: 10px;">Nezbytné řidičské oprávnění</label>
                     <select class="input-dark" id="comp-filter-req" onchange="renderDriversCatalog()">
@@ -572,7 +582,7 @@
     </div>
 
     <div id="screen-checkout" class="screen">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="header" style="justify-content: flex-start; gap: 15px; background: transparent; border: none;">
             <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer; color: #fff;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
         </div>
@@ -600,7 +610,7 @@
     </div>
 
     <div id="screen-paywall" class="screen">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="Logo.png" class="corner-logo-mini" alt="logo">
         <div class="header" style="justify-content: flex-start; gap: 15px; background: transparent; border: none;">
             <div class="back-btn" onclick="goBack()" style="width: auto; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer; color: #fff;"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
         </div>
@@ -623,7 +633,8 @@
     let isPremium = false; 
     let currentRole = ''; 
     let historyStack = []; 
-    let isProfileComplete = false; 
+    // Pro bezproblémové testování všech 10 funkcí ihned je profil nahozen jako vyplněný
+    let isProfileComplete = true; 
     let isLightMode = false;
     let slotCounter = 1;
 
@@ -632,7 +643,7 @@
         let a = cityA.toLowerCase().trim(); let b = cityB.toLowerCase().trim();
         if(a === b) return 0;
         if(cityMap[a] && cityMap[b]) return Math.round(Math.sqrt(Math.pow(cityMap[b].x - cityMap[a].x, 2) + Math.pow(cityMap[b].y - cityMap[a].y, 2)));
-        return Math.floor(Math.random() * 80) + 10; // Pro ukázku neznámých měst
+        return Math.floor(Math.random() * 80) + 10; 
     }
 
     function getAge(dobString) {
@@ -643,7 +654,7 @@
         return age;
     }
 
-    // KOMPLETNÍ DATABÁZE FIREM (10x)
+    // 10x TESTOVACÍCH FIREM
     const companiesDB = {
         'Control Point s.r.o.': { phone: '+420 777 123 456', contactPref: 'whatsapp', rating: '4.9', reviews: 24, bio: 'Spolehlivá logistika, jezdíme převážně novými vozy Scania.' },
         'Dřevo Transport': { phone: '+420 600 111 222', contactPref: 'phone', rating: '4.5', reviews: 8, bio: 'Rodinná firma zaměřená na svoz dřeva. Férové jednání.' },
@@ -657,7 +668,7 @@
         'Metrans': { phone: '+420 300 200 100', contactPref: 'app', rating: '4.7', reviews: 140, bio: 'Kontejnerová přeprava v okolí depa a přístavů.' }
     };
 
-    // KOMPLETNÍ DATABÁZE ŘIDIČŮ (10x)
+    // 10x TESTOVACÍCH ŘIDIČŮ
     const driversDB = [
         { id: 'd1', name: 'Jan Koukal', dob: '1985-05-15', bio: 'Spolehlivý řidič, nekuřák, hledám stabilní záskoky.', rating: '4.9', reviews: 12, loc: 'Olomouc', req: ['C+E', 'C', 'B'], certs: ['Karta do tachografu', 'Profesní průkaz', 'VZV', 'ADR'], region: ['Vnitro', 'MKD'], phone: '+420 777 123 456', contactPref: 'whatsapp', slots: [{start: '2026-06-20', end: '2026-06-25'}] },
         { id: 'd2', name: 'Petr Novák', dob: '1992-10-20', bio: 'Jezdím hlavně dodávkou po ČR, občas SK.', rating: '4.5', reviews: 3, loc: 'Ostrava', req: ['B'], certs: [], region: ['Vnitro'], phone: '+420 600 000 000', contactPref: 'phone', slots: [{start: '2026-07-01', end: '2026-07-10'}] },
@@ -671,18 +682,18 @@
         { id: 'd10', name: 'Josef Kučera', dob: '1990-07-07', bio: 'Sklápěče, stavby. Nevadí mi ušpinit se.', rating: '4.6', reviews: 9, loc: 'Praha', req: ['C+E', 'C'], certs: ['Karta do tachografu', 'Profesní průkaz'], region: ['Vnitro'], phone: '+420 774 477 744', contactPref: 'app', slots: [{start: '2026-06-20', end: '2026-06-30'}] }
     ];
 
-    // KOMPLETNÍ DATABÁZE INZERÁTŮ (10x)
+    // 10x TESTOVACÍCH INZERÁTŮ
     let jobsData = [
         { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', region: 'MKD', from: 'Olomouc, Tovární 1', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého', dateFrom: '20.06.2026 06:00', dateTo: '25.06.2026 18:00' },
         { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', region: 'Vnitro', from: 'Šumperk, Pila Jih', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP', dateFrom: '22.06.2026 05:00', dateTo: '22.06.2026 20:00' },
-        { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', region: 'MKD', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: '01.07.2026', dateTo: 'Neurčito' },
+        { id: 3, compName: 'TourBus CZ', type: 'Dlouhodobá', region: 'MKD', from: 'Praha, Florenc', to: 'Zájezdy AT/IT', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: ['D', 'D+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 55000, priceTxt: '55 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého', dateFrom: '01.07.2026', dateTo: 'Neurčito' },
         { id: 4, compName: 'Rohlík.cz Logistika', type: 'Záskok (Dovolená)', region: 'Vnitro', from: 'Brno, Sklad', to: 'Rozvoz Brno a okolí', vehicleFilter: 'Dodávka', vehicleTxt: 'Chladírenská Dodávka', req: ['B'], certs: [], priceVal: 2200, priceTxt: '2 200 Kč', priceFreq: 'Za den', priceTax: 'DPP', dateFrom: '25.06.2026 08:00', dateTo: '30.06.2026 18:00' },
-        { id: 5, compName: 'Agrofert Doprava', type: 'Jednorázovka', region: 'Vnitro', from: 'Olomouc', to: 'Silo Pardubice', vehicleFilter: 'Sólo', vehicleTxt: 'Sklápěč / Sólo', req: ['C'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 4000, priceTxt: '4 000 Kč', priceFreq: 'Za točku', priceTax: 'IČO / Faktura', dateFrom: '21.06.2026 06:00', dateTo: '21.06.2026 15:00' },
-        { id: 6, compName: 'DB Schenker', type: 'Dlouhodobá', region: 'MKD', from: 'Praha, Rudná', to: 'Německo (Pravidelná linka)', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Frigo', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 65000, priceTxt: '65 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: '15.07.2026', dateTo: 'Neurčito' },
-        { id: 7, compName: 'PPL CZ', type: 'Záskok (Nemoc)', region: 'Vnitro', from: 'Ostrava, Depo', to: 'Rozvoz Ostrava', vehicleFilter: 'Dodávka', vehicleTxt: 'Skříňová dodávka', req: ['B'], certs: [], priceVal: 2000, priceTxt: '2 000 Kč', priceFreq: 'Za den', priceTax: 'IČO / Faktura', dateFrom: '20.06.2026 07:00', dateTo: '24.06.2026 16:00' },
-        { id: 8, compName: 'Hanzalík a.s.', type: 'Jednorázovka', region: 'MKD', from: 'Plzeň', to: 'Francie a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Plachta', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 15000, priceTxt: '15 000 Kč', priceFreq: 'Za celý kontrakt', priceTax: 'Čistého', dateFrom: '01.07.2026 08:00', dateTo: '05.07.2026 18:00' },
-        { id: 9, compName: 'ČSAD Linky', type: 'Dlouhodobá', region: 'Vnitro', from: 'Liberec', to: 'Pravidelné linky kraj', vehicleFilter: 'Autobus', vehicleTxt: 'Meziměstský Bus', req: ['D'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 45000, priceTxt: '45 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)', dateFrom: '01.08.2026', dateTo: 'Neurčito' },
-        { id: 10, compName: 'Metrans', type: 'Záskok (Dovolená)', region: 'MKD', from: 'Praha, Uhříněves', to: 'Hamburg přístav', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Kontejner', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz', 'ADR'], priceVal: 4500, priceTxt: '4 500 Kč', priceFreq: 'Za den', priceTax: 'IČO / Faktura', dateFrom: '10.07.2026 06:00', dateTo: '20.07.2026 18:00' }
+        { id: 5, compName: 'Agrofert Doprava', type: 'Jednorázovka', region: 'Vnitro', from: 'Olomouc', to: 'Silo Pardubice', vehicleFilter: 'Sólo', vehicleTxt: 'Sklápěč / Sólo', req: ['C'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 4000, priceTxt: '4 000 Kč', priceFreq: 'Za točku', priceTax: 'IČO', dateFrom: '21.06.2026 06:00', dateTo: '21.06.2026 15:00' },
+        { id: 6, compName: 'DB Schenker', type: 'Dlouhodobá', region: 'MKD', from: 'Praha, Rudná', to: 'Německo (Pravidelná linka)', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Frigo', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 65000, priceTxt: '65 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého', dateFrom: '15.07.2026', dateTo: 'Neurčito' },
+        { id: 7, compName: 'PPL CZ', type: 'Záskok (Nemoc)', region: 'Vnitro', from: 'Ostrava, Depo', to: 'Rozvoz Ostrava', vehicleFilter: 'Dodávka', vehicleTxt: 'Skříňová dodávka', req: ['B'], certs: [], priceVal: 2000, priceTxt: '2 000 Kč', priceFreq: 'Za den', priceTax: 'IČO', dateFrom: '20.06.2026 07:00', dateTo: '24.06.2026 16:00' },
+        { id: 8, compName: 'Hanzalík a.s.', type: 'Jednorázovka', region: 'MKD', from: 'Plzeň', to: 'Francie a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Plachta', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 15000, priceTxt: '15 000 Kč', priceFreq: 'Za kontrakt', priceTax: 'Čistého', dateFrom: '01.07.2026 08:00', dateTo: '05.07.2026 18:00' },
+        { id: 9, compName: 'ČSAD Linky', type: 'Dlouhodobá', region: 'Vnitro', from: 'Liberec', to: 'Pravidelné linky kraj', vehicleFilter: 'Autobus', vehicleTxt: 'Meziměstský Bus', req: ['D'], certs: ['Karta do tachografu', 'Profesní průkaz'], priceVal: 45000, priceTxt: '45 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého', dateFrom: '01.08.2026', dateTo: 'Neurčito' },
+        { id: 10, compName: 'Metrans', type: 'Záskok (Dovolená)', region: 'MKD', from: 'Praha, Uhříněves', to: 'Hamburg přístav', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Kontejner', req: ['C+E'], certs: ['Karta do tachografu', 'Profesní průkaz', 'ADR'], priceVal: 4500, priceTxt: '4 500 Kč', priceFreq: 'Za den', priceTax: 'IČO', dateFrom: '10.07.2026 06:00', dateTo: '20.07.2026 18:00' }
     ];
 
     function previewImage(input, previewId) {
@@ -709,12 +720,12 @@
             <h2 style="color:var(--primary); margin-bottom: 10px;">Recenze: ${name}</h2>
             <div class="review-box">
                 <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                <div style="font-size: 13px; margin-top: 5px;">"Spolehlivý, perfektní komunikace."</div>
+                <div style="font-size: 13px; margin-top: 5px; color: var(--text-main);">"Spolehlivý, perfektní komunikace."</div>
                 <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Před měsícem</div>
             </div>
             <div class="review-box">
                 <div class="rating-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                <div style="font-size: 13px; margin-top: 5px;">"Vše proběhlo naprosto v pořádku."</div>
+                <div style="font-size: 13px; margin-top: 5px; color: var(--text-main);">"Vše proběhlo naprosto v pořádku."</div>
                 <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">- Před 2 měsíci</div>
             </div>
         `);
@@ -759,8 +770,8 @@
 
     function simulateExpiry() { 
         isTrialActive = false; isPremium = false; alert("Simulace: Zkušební verze vypršela. Funkce jsou nyní omezené."); updateTrialBadge();
-        if(currentRole === 'driver' && isProfileComplete) renderJobs(); 
-        if(currentRole === 'company' && isProfileComplete) { renderPublish(); renderDriversCatalog(); } 
+        if(currentRole === 'driver') renderJobs(); 
+        if(currentRole === 'company') { renderPublish(); renderDriversCatalog(); } 
         navigate('screen-app');
     }
 
@@ -769,19 +780,23 @@
         switchTab('driver-jobs'); toggleMenu();
     }
 
+    function viewAllCompaniesAsDriver() {
+        if (!isPremium && !isTrialActive) { navigate('screen-paywall'); toggleMenu(); return; }
+        switchTab('driver-all-companies'); toggleMenu();
+    }
+
     function switchTab(id, menuEl = null) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
         document.getElementById('tab-'+id).classList.add('active');
         if(menuEl) { document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active')); menuEl.classList.add('active'); }
         
         if(id === 'driver-jobs') { 
-            if(currentRole === 'company') {
-                document.getElementById('driver-jobs-locked').style.display = 'none'; document.getElementById('driver-jobs-content').style.display = 'block'; renderJobs();
-            } else {
-                if(!isProfileComplete) { document.getElementById('driver-jobs-locked').style.display = 'block'; document.getElementById('driver-jobs-content').style.display = 'none'; } else { document.getElementById('driver-jobs-locked').style.display = 'none'; document.getElementById('driver-jobs-content').style.display = 'block'; renderJobs(); }
-            }
+            document.getElementById('driver-jobs-locked').style.display = 'none'; 
+            document.getElementById('driver-jobs-content').style.display = 'block'; 
+            renderJobs();
         }
-        if(id === 'company-add') { if(!isProfileComplete) { document.getElementById('company-jobs-locked').style.display = 'block'; document.getElementById('company-jobs-content').style.display = 'none'; } else { document.getElementById('company-jobs-locked').style.display = 'none'; document.getElementById('company-jobs-content').style.display = 'block'; renderPublish(); } }
+        if(id === 'driver-all-companies') renderAllCompanies();
+        if(id === 'company-add') { document.getElementById('company-jobs-locked').style.display = 'none'; document.getElementById('company-jobs-content').style.display = 'block'; renderPublish(); }
         if(id === 'company-drivers') renderDriversCatalog();
     }
 
@@ -837,6 +852,27 @@
         if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Žádné jízdy neodpovídají filtrům. Zkuste slevit z požadavků.</div>`;
     }
 
+    function renderAllCompanies() {
+        const cont = document.getElementById('driver-all-companies-list');
+        cont.innerHTML = '';
+        Object.keys(companiesDB).forEach(compName => {
+            const c = companiesDB[compName];
+            let contactIcon = '<i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i>';
+            if(c.contactPref === 'phone') contactIcon = '<i class="fa-solid fa-phone" style="color:var(--primary)"></i>';
+            if(c.contactPref === 'app') contactIcon = '<i class="fa-solid fa-envelope" style="color:var(--text-muted)"></i>';
+            
+            cont.innerHTML += `
+            <div class="card" onclick="alert('Zde bude detail firmy a možnost kontaktování.\\n\\nFirma: ${compName}\\nTelefon: ${c.phone}')">
+                <div style="font-size:16px;font-weight:bold; color: var(--text-main);">${compName}</div>
+                <div style="margin: 5px 0 10px 0; display:flex; align-items:center; justify-content:space-between;">
+                    <div><span class="rating-stars"><i class="fa-solid fa-star"></i> ${c.rating}</span> <span style="font-size:11px;color:var(--text-muted);">(${c.reviews} recenzí)</span></div>
+                    <div>${contactIcon}</div>
+                </div>
+                <div style="font-size: 13px; color: var(--text-muted); font-style: italic;">"${c.bio}"</div>
+            </div>`;
+        });
+    }
+
     function showJobDetail(id) {
         const j = jobsData.find(x => x.id === id);
         const comp = companiesDB[j.compName] || { phone: '+420 000 000 000', contactPref: 'app', rating: '4.0', reviews: 0, bio: '' };
@@ -859,7 +895,7 @@
                 <span class="rating-stars" style="font-size: 15px;"><i class="fa-solid fa-star"></i> ${comp.rating}</span> 
                 <span class="rating-count" style="font-size: 13px;">(Číst ${comp.reviews} recenzí)</span>
             </div>
-            <div style="background:rgba(128,128,128,.1);padding:15px;border-radius:8px;margin-bottom:15px; border: 1px solid var(--border-color);">
+            <div style="background:var(--bg-card);padding:15px;border-radius:8px;margin-bottom:15px; border: 1px solid var(--border-color);">
                 <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Místo výjezdu:</div><div style="font-size:14px;font-weight:bold;margin-bottom:15px; color: var(--text-main);">📍 ${j.from}</div>
                 <div style="font-size:13px;margin-bottom:5px;color:var(--text-muted);">Destinace cesty: <span style="background: var(--premium); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle;">${j.region}</span></div><div style="font-size:14px;font-weight:bold;margin-bottom:15px; color: var(--text-main);">🏁 ${j.to}</div>
                 <div style="font-size:13px;color:var(--primary); margin-top:10px;">🕒 Od: <strong>${j.dateFrom}</strong></div><div style="font-size:13px;color:var(--primary);">🕒 Do: <strong>${j.dateTo}</strong></div>
@@ -941,7 +977,7 @@
     }
 
     function renderPublish() { document.getElementById('publish-btn-container').innerHTML = (isTrialActive || isPremium) ? `<button class="btn btn-primary" onclick="alert('✅ Inzerát zveřejněn!'); switchTab('company-drivers');"><i class="fa-solid fa-upload"></i> Zveřejnit inzerát</button>` : `<button class="btn btn-premium" onclick="navigate('screen-paywall')"><i class="fa-solid fa-lock"></i> Zaplatit pro zveřejnění</button>`; }
-    function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = false; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
+    function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = true; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
     navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 2500);
