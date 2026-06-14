@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Střídač - Profesionální platforma</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="theme-color" content="#f39c12">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         /* DYNAMICKÉ PROMĚNNÉ PRO TEMNÝ / SVĚTLÝ REŽIM */
         :root {
@@ -275,9 +283,9 @@
                 
                 <button class="btn btn-whatsapp" onclick="tryLogin()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-google" onclick="prihlasitGoogle()">
-    <i class="fa-brands fa-google"></i> Přihlásit Googlem
-</button>
+                    <button class="btn btn-google" id="btn-login-google">
+                        <i class="fa-brands fa-google"></i> Přihlásit Googlem
+                    </button>
 
                     <button class="btn btn-apple" onclick="tryLogin()"><i class="fa-brands fa-apple"></i> Apple</button>
                 </div>
@@ -1035,46 +1043,48 @@
     }
 
     function renderPublish() { document.getElementById('publish-btn-container').innerHTML = (isTrialActive || isPremium) ? `<button class="btn btn-primary" onclick="alert('✅ Inzerát zveřejněn!'); switchTab('company-drivers');"><i class="fa-solid fa-upload"></i> Zveřejnit inzerát</button>` : `<button class="btn btn-premium" onclick="navigate('screen-paywall')"><i class="fa-solid fa-lock"></i> Zaplatit pro zveřejnění</button>`; }
-    function logoutApp() { isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = true; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); }
+    function logoutApp() { 
+        supabase.auth.signOut().then(() => {
+            isTrialActive = true; isPremium = false; currentRole = ''; historyStack = []; isProfileComplete = true; document.getElementById('legal-consent').checked = false; document.getElementById('menu-premium-btn').style.display = 'flex'; toggleMenu(); navigate('screen-login'); 
+        });
+    }
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
-    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 2500);
-</script>
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    // --- SUPABASE PŘIHLÁŠENÍ ---
+    const supabaseUrl = 'https://ssrhzamqebwakfpaecqb.supabase.co';
+    const supabaseAnonKey = 'EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcmh6YW1xZWJ3YWtmcGFlY3FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NTg0MDIsImV4cCI6MjA5NzAzNDQwMn0.Po1yUURLzRFmqZvsK5MQNvEiyA_0UO5aKDl_MZMvzps';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDa-1rGJQFRxLktmqH2rtPvRkLaGy1latg",
-    authDomain: "stridaci1.firebaseapp.com",
-    projectId: "stridaci1",
-    storageBucket: "stridaci1.firebasestorage.app",
-    messagingSenderId: "837275148828",
-    appId: "1:837275148828:web:868c42352b6f33b85f75d9",
-    measurementId: "G-VX9P9JFWS5"
-  };
+    document.getElementById('btn-login-google').onclick = async () => {
+        if(!document.getElementById('legal-consent').checked) { 
+            alert('Nejprve musíte souhlasit s podmínkami (zaškrtávátko nad tlačítkem).'); 
+            return; 
+        } 
+        
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+        });
+        
+        if (error) { alert("Chyba při přihlášení: " + error.message); }
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (session) {
+            console.log("Přihlášen jako: " + session.user.email);
+            // Zobrazíme obrazovku s výběrem role
+            if(document.getElementById('screen-loading').classList.contains('active') || document.getElementById('screen-login').classList.contains('active')) {
+                navigate('screen-role');
+            }
+        }
+    });
 
-  // Funkce, kterou volá tlačítko v HTML
-  window.prihlasitGoogle = () => {
-    signInWithPopup(auth, new GoogleAuthProvider())
-      .then((result) => {
-        // Po přihlášení automaticky spustíme tvoji aplikaci
-        enterApp(); 
-      })
-      .catch((error) => {
-        alert("Chyba při přihlášení: " + error.message);
-      });
-  };
-
-  // Automatické rozpoznání přihlášení (když se vrátíš do appky později)
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      enterApp();
-    }
-  });
+    navigate('screen-loading'); 
+    setTimeout(() => { 
+        if(!document.getElementById('screen-role').classList.contains('active')) {
+            navigate('screen-login'); 
+        }
+    }, 2500);
 </script>
 
 </body>
