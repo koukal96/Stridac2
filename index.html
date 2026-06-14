@@ -202,8 +202,27 @@
                             <option value="D+E">Bus s přívěsem (D+E)</option>
                         </select>
 
-                        <label>Minimální odměna (Kč)</label>
-                        <input type="number" id="filter-min-money" class="input-dark" placeholder="Např. 2500" oninput="renderJobs()">
+                        <label style="margin-top: 10px;">Minimální odměna (Kč)</label>
+                        <input type="number" id="filter-min-money" class="input-dark" placeholder="Např. 3000" oninput="renderJobs()">
+
+                        <label style="margin-top: 10px;">Požadované řidičské oprávnění</label>
+                        <select class="input-dark" id="filter-job-req" onchange="renderJobs()">
+                            <option value="Vše">Nezáleží</option>
+                            <option value="C+E">C+E (Souprava)</option>
+                            <option value="C">C (Sólo)</option>
+                            <option value="B">B (Dodávka)</option>
+                            <option value="D">D (Autobus)</option>
+                            <option value="D+E">D+E</option>
+                        </select>
+
+                        <label style="margin-top: 10px;">Vyžadované průkazy k zakázce</label>
+                        <select class="input-dark" id="filter-job-certs" onchange="renderJobs()">
+                            <option value="Vše">Nezáleží</option>
+                            <option value="Tacho">Karta do tachografu</option>
+                            <option value="ADR">ADR</option>
+                            <option value="VZV">VZV (Ještěrka)</option>
+                            <option value="Profesák">Profesní průkaz</option>
+                        </select>
                     </div>
                     <div id="jobs-list"></div>
                 </div>
@@ -317,11 +336,13 @@
                             <option>Za celý kontrakt</option>
                         </select>
 
-                        <label style="font-size: 12px; color: var(--text-muted);">Způsob úhrady / Zdanění:</label>
+                        <label style="font-size: 12px; color: var(--text-muted);">Způsob úhrady / Smlouva:</label>
                         <select class="input-dark">
-                            <option>Čistého (Na ruku / DPP)</option>
+                            <option>Čistého</option>
                             <option>Hrubého (HPP)</option>
-                            <option>Na fakturu (IČO)</option>
+                            <option>DPP</option>
+                            <option>DPČ</option>
+                            <option>Jiné</option>
                         </select>
                         
                         <div id="publish-btn-container" style="margin-top: 15px;"></div>
@@ -413,9 +434,10 @@
 
     let jobsData = [
         { id: 1, compName: 'Control Point s.r.o.', type: 'Záskok (Nemoc)', from: 'Olomouc', to: 'Rakousko a zpět', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Návěs (Plachta)', req: 'C+E', certs: 'Tacho, Profesák', priceVal: 3500, priceTxt: '3 500 Kč', priceFreq: 'Za den', priceTax: 'Čistého' },
-        { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', from: 'Šumperk', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: 'C+E', certs: 'Tacho, Profesák, Hydr. ruka', priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'Na IČO (Faktura)' },
-        { id: 3, compName: 'Speedy Express', type: 'Dlouhodobá', from: 'Brno', to: 'Rozvoz Morava', vehicleFilter: 'Dodávka', vehicleTxt: 'Dodávka Skříň', req: 'B', certs: 'Není třeba', priceVal: 45000, priceTxt: '45 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)' },
-        { id: 4, compName: 'TourBus CZ', type: 'Zájezd', from: 'Praha', to: 'Itálie (Pobytovka)', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: 'D', certs: 'Tacho, Profesák', priceVal: 18000, priceTxt: '18 000 Kč', priceFreq: 'Za celý kontrakt', priceTax: 'Čistého' }
+        { id: 2, compName: 'Dřevo Transport', type: 'Jednorázovka', from: 'Šumperk', to: 'Paskov', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Lesovůz', req: 'C+E', certs: 'Tacho, Profesák, Hydr. ruka', priceVal: 5000, priceTxt: '5 000 Kč', priceFreq: 'Za točku', priceTax: 'DPP' },
+        { id: 3, compName: 'Speedy Express', type: 'Dlouhodobá', from: 'Brno', to: 'Rozvoz Morava', vehicleFilter: 'Dodávka', vehicleTxt: 'Dodávka Skříň', req: 'B', certs: '', priceVal: 45000, priceTxt: '45 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Hrubého (HPP)' },
+        { id: 4, compName: 'TourBus CZ', type: 'Zájezd', from: 'Praha', to: 'Itálie (Pobytovka)', vehicleFilter: 'Autobus', vehicleTxt: 'Zájezdový Bus', req: 'D', certs: 'Tacho, Profesák', priceVal: 18000, priceTxt: '18 000 Kč', priceFreq: 'Za celý kontrakt', priceTax: 'DPČ' },
+        { id: 5, compName: 'Chemie Trans', type: 'Dlouhodobá', from: 'Ostrava', to: 'D, PL', vehicleFilter: 'Tahač+Návěs', vehicleTxt: 'Tahač + Cisterna (ADR)', req: 'C+E', certs: 'Tacho, Profesák, ADR', priceVal: 60000, priceTxt: '60 000 Kč', priceFreq: 'Měsíčně', priceTax: 'Jiné' }
     ];
 
     // NAVIGACE
@@ -495,16 +517,22 @@
         const city = document.getElementById('filter-city').value;
         const rad = parseInt(document.getElementById('filter-radius').value);
         const vehFilter = document.getElementById('filter-vehicle-type').value;
+        const reqFilter = document.getElementById('filter-job-req').value;
+        const certsFilter = document.getElementById('filter-job-certs').value;
         const minMoneyStr = document.getElementById('filter-min-money').value;
         const minMoney = minMoneyStr === '' ? 0 : parseInt(minMoneyStr);
 
         cont.innerHTML = '';
+        let found = false;
         jobsData.forEach(j => {
             const dist = getDistance(city, j.from); 
             if(dist > rad) return; 
             if(vehFilter !== 'Vše' && !j.vehicleFilter.includes(vehFilter)) return; 
+            if(reqFilter !== 'Vše' && !j.req.includes(reqFilter)) return;
+            if(certsFilter !== 'Vše' && !j.certs.includes(certsFilter)) return;
             if(j.priceVal < minMoney) return;
 
+            found = true;
             cont.innerHTML += `
                 <div class="card" onclick="showJobDetail(${j.id})">
                     <div style="font-size:16px;font-weight:bold;color:var(--primary);">${j.compName} <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
@@ -514,6 +542,8 @@
                     <div class="card-price">${j.priceTxt} <span style="font-size: 12px; font-weight: normal; color: var(--text-muted); display: block;">${j.priceFreq} | ${j.priceTax}</span></div>
                 </div>`;
         });
+        
+        if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Žádné jízdy neodpovídají filtrům. Zkus slevit na částce nebo přidat oprávnění.</div>`;
     }
 
     function showJobDetail(id) {
@@ -531,7 +561,7 @@
             <div style="font-size:14px;color:#fff;line-height:1.8;margin-bottom:20px;">
                 🚛 Vozidlo/Nástavba: <strong>${j.vehicleTxt}</strong><br>
                 🪪 Nutné řidičáky: <strong style="color:var(--primary);">${j.req}</strong><br>
-                📜 Nutné průkazy: <strong>${j.certs}</strong>
+                📜 Nutné průkazy: <strong>${j.certs !== '' ? j.certs : 'Nejsou potřeba'}</strong>
             </div>
             ${btns}`);
     }
