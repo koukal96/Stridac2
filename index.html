@@ -275,7 +275,10 @@
                 
                 <button class="btn btn-whatsapp" onclick="tryLogin()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-google" onclick="tryLogin()"><i class="fa-brands fa-google"></i> Google</button>
+                    <button class="btn btn-google" onclick="prihlasitGoogle()">
+    <i class="fa-brands fa-google"></i> Přihlásit Googlem
+</button>
+
                     <button class="btn btn-apple" onclick="tryLogin()"><i class="fa-brands fa-apple"></i> Apple</button>
                 </div>
             </div>
@@ -1037,5 +1040,35 @@
 
     navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 2500);
 </script>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDa-1rGJQFRxLktmqH2rtPvRkLaGy1latg",
+    authDomain: "stridaci1.firebaseapp.com",
+    projectId: "stridaci1",
+    storageBucket: "stridaci1.firebasestorage.app",
+    messagingSenderId: "837275148828",
+    appId: "1:837275148828:web:868c42352b6f33b85f75d9",
+    measurementId: "G-VX9P9JFWS5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Funkce, kterou zavoláš svým tlačítkem v HTML
+  window.prihlasitGoogle = () => {
+    signInWithPopup(auth, new GoogleAuthProvider())
+      .then((result) => {
+        console.log("Jsi přihlášen!", result.user.displayName);
+        alert("Vítej, " + result.user.displayName);
+      })
+      .catch((error) => {
+        console.error("Chyba:", error.message);
+      });
+  };
+</script>
+
 </body>
 </html>
