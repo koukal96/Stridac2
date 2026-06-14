@@ -44,13 +44,12 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-
-    body {
+body {
     background-color: var(--bg-main);
     background-image: url('IMG_8634.jpeg');
     background-size: cover; 
-    background-position: 70% center; /* Stejná hodnota jako u načítání, aby to neskočilo */
-    background-attachment: fixed;
+    background-position: 85% center; /* Ukáže čumák, který je na fotce vpravo */
+    /* Záměrně smazáno background-attachment, aby iPhone nezoomoval fotku! */
     display: flex; justify-content: center; height: 100dvh; overflow: hidden; color: var(--text-main);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -156,9 +155,10 @@
         /* BUDÍK NAČÍTÁNÍ */
         #screen-loading { 
     display: none; justify-content: center; align-items: center; flex-direction: column; 
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), url('IMG_8634.jpeg'); 
+    /* Zesvětlený přechod, aby nebyl kamion tak tmavý (změněno na 0.3 a 0.6) */
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('IMG_8634.jpeg'); 
     background-size: cover; 
-    background-position: 70% center; /* 70% posune kamion víc doleva než 'right' (100%) */
+    background-position: 85% center; /* Musí být stejné jako u body, ať to neskáče */
     z-index: 100; 
 }
         #screen-loading.active { display: flex; }
@@ -899,7 +899,7 @@
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
     // RYCHLÝ START APLIKACE
-    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 1000);
+    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 3500);
 </script>
 </body>
 </html>
