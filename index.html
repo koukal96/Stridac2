@@ -243,7 +243,7 @@
     </div>
 
     <div id="screen-loading" class="screen active">
-        <img src="logo_1.png" class="corner-logo-mini" alt="logo">
+        <img src="logo.png" alt="Logo Střídač" style="width: 250px; max-width: 80%; height: auto; margin-bottom: 30px; z-index: 2;">
         <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
     </div>
 
@@ -356,6 +356,22 @@
                             <option value="Autobus">Autobus (D, D+E)</option>
                         </select>
 
+                        <label style="margin-top: 10px;">Nezbytná oprávnění a průkazy</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="input-dark" id="filter-job-req" style="flex: 1; margin-bottom: 0;" onchange="renderJobs()">
+                                <option value="Vše">Jakýkoliv ŘP</option>
+                                <option value="C+E">C+E</option>
+                                <option value="C">C</option>
+                                <option value="B">B</option>
+                                <option value="D">D</option>
+                            </select>
+                            <select class="input-dark" id="filter-job-certs" style="flex: 1; margin-bottom: 0;" onchange="renderJobs()">
+                                <option value="Vše">Všechny průkazy</option>
+                                <option value="ADR">ADR</option>
+                                <option value="VZV">VZV</option>
+                            </select>
+                        </div>
+
                         <label style="margin-top: 10px;">Minimální odměna</label>
                         <div style="display: flex; gap: 10px;">
                             <input type="number" id="filter-min-money" class="input-dark" placeholder="Částka (Kč)" style="flex: 1; margin-bottom: 0;" oninput="renderJobs()">
@@ -412,6 +428,29 @@
                         <option value="phone">Zobrazit telefonní číslo</option>
                         <option value="app">Pouze přes aplikaci (Skryté)</option>
                     </select>
+                </div>
+
+                <div class="form-section">
+                    <h3>Požadovaná odměna</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="number" class="input-dark" placeholder="Částka" style="flex: 2; margin-bottom: 0;">
+                        <select class="input-dark" style="flex: 1; margin-bottom: 0;">
+                            <option value="CZK">CZK</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <select class="input-dark" style="flex: 1; margin-bottom: 0;">
+                            <option value="Za den">Za den</option>
+                            <option value="Za točku">Za točku</option>
+                            <option value="Měsíčně">Měsíčně</option>
+                        </select>
+                        <select class="input-dark" style="flex: 1; margin-bottom: 0;">
+                            <option value="Čistého">Čistého</option>
+                            <option value="Hrubého">Hrubého</option>
+                            <option value="IČO">Na IČO</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -530,14 +569,21 @@
                     <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>0 km</span><span id="comp-filter-radius-val" style="color:var(--primary); font-weight:bold;">500 km</span></div>
                     <input type="range" id="comp-filter-radius" min="0" max="500" value="500" oninput="document.getElementById('comp-filter-radius-val').innerText = this.value + ' km'; renderDriversCatalog();">
 
-                    <label style="margin-top: 10px;">Nezbytné řidičské oprávnění</label>
-                    <select class="input-dark" id="comp-filter-req" onchange="renderDriversCatalog()">
-                        <option value="Vše">Všechna oprávnění</option>
-                        <option value="C+E">Hledám na C+E</option>
-                        <option value="C">Hledám na C</option>
-                        <option value="B">Hledám na B (Dodávka)</option>
-                        <option value="D">Hledám na D (Bus)</option>
-                    </select>
+                    <label style="margin-top: 10px;">Nezbytné řidičské oprávnění a průkazy</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select class="input-dark" id="comp-filter-req" style="flex: 1; margin-bottom: 0;" onchange="renderDriversCatalog()">
+                            <option value="Vše">Všechna oprávnění</option>
+                            <option value="C+E">Hledám na C+E</option>
+                            <option value="C">Hledám na C</option>
+                            <option value="B">Hledám na B (Dodávka)</option>
+                            <option value="D">Hledám na D (Bus)</option>
+                        </select>
+                        <select class="input-dark" id="comp-filter-certs" style="flex: 1; margin-bottom: 0;" onchange="renderDriversCatalog()">
+                            <option value="Vše">Jakékoliv průkazy</option>
+                            <option value="ADR">Vyžaduji ADR</option>
+                            <option value="VZV">Vyžaduji VZV</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="drivers-catalog-list"></div>
             </div>
@@ -816,8 +862,13 @@
         const city = document.getElementById('filter-city').value;
         const rad = parseInt(document.getElementById('filter-radius').value);
         const vehFilter = document.getElementById('filter-vehicle-type').value;
-        const reqFilter = document.getElementById('filter-job-req').value;
-        const certsFilter = document.getElementById('filter-job-certs').value;
+        
+        // Zabezpečené načítání hodnot, aby JS nespadl
+        const reqFilterEl = document.getElementById('filter-job-req');
+        const reqFilter = reqFilterEl ? reqFilterEl.value : 'Vše';
+        const certsFilterEl = document.getElementById('filter-job-certs');
+        const certsFilter = certsFilterEl ? certsFilterEl.value : 'Vše';
+        
         const minMoneyStr = document.getElementById('filter-min-money').value;
         const regionFilter = document.getElementById('filter-region').value;
         const minMoney = minMoneyStr === '' ? 0 : parseInt(minMoneyStr);
@@ -914,7 +965,10 @@
         const cCity = document.getElementById('comp-filter-city').value;
         const rad = parseInt(document.getElementById('comp-filter-radius').value);
         const reqF = document.getElementById('comp-filter-req').value;
-        const certF = document.getElementById('comp-filter-certs').value;
+        
+        const certFEl = document.getElementById('comp-filter-certs');
+        const certF = certFEl ? certFEl.value : 'Vše';
+        
         const regionF = document.getElementById('comp-filter-region').value;
 
         let found = false;
