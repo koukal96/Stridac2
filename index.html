@@ -2,139 +2,693 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STŘÍDAČ - Kompletní platforma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Střídač - Plná platforma</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #f39c12; --bg: #050505; --dark: #151515; --text: #fff; --premium: #9b59b6; --success: #2ecc71; --danger: #e74c3c; }
-        body { background: #000; color: var(--text); font-family: sans-serif; height: 100vh; overflow: hidden; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 480px; height: 100%; background: var(--bg); position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .screen { display: none; height: 100%; flex-direction: column; }
-        .screen.active { display: flex; }
-        .header { padding: 15px; background: #111; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 10; }
-        .content { flex: 1; overflow-y: auto; padding: 20px; }
-        /* Modal - Opravené scrollování */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:999; justify-content:center; align-items:center; }
-        .modal.active { display: flex; }
-        .modal-cont { background: #111; width: 90%; height: 85vh; border: 1px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
-        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
-        /* Prvky */
-        .btn { padding: 14px; background: var(--primary); border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        :root {
+            --primary: #f39c12;
+            --dark: #0a0a0a;
+            --glass-bg: rgba(15, 15, 15, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-light: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --premium: #9b59b6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: #000;
+            background-image: url('https://images.unsplash.com/photo-1586191552066-f52fd92fb4c2?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-light);
+        }
+
+        .app-container {
+            width: 100%; max-width: 480px; height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+        }
+
+        /* OBRAZOVKY A ANIMACE */
+        .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow: hidden; position: relative; }
+        .screen.active { display: flex; animation: fadeScreen 0.3s ease-in-out; }
+        @keyframes fadeScreen { from { opacity: 0; } to { opacity: 1; } }
+
+        .bg-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 80%), url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=600&auto=format&fit=crop');
+            background-size: cover; background-position: center; z-index: -1; opacity: 0.6;
+        }
+
+        /* HLAVIČKA */
+        .header { padding: 15px 20px; background: rgba(0,0,0,0.85); border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; z-index: 10; }
+        .back-btn { color: var(--text-light); font-size: 16px; cursor: pointer; padding: 5px; width: 70px; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        .header-right { width: 70px; }
+        
+        .trial-banner { background: var(--success); color: #000; text-align: center; font-size: 13px; padding: 8px; font-weight: bold; cursor: pointer; display: none; }
+        .trial-banner.expired { background: var(--danger); color: #fff; }
+
+        .content { flex: 1; overflow-y: auto; padding: 20px; scrollbar-width: none; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* VYSKAKOVACÍ OKNA (MODALS) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
+        .modal-content { background: #111; border: 1px solid var(--primary); border-radius: 12px; width: 90%; max-width: 400px; max-height: 85vh; display: flex; flex-direction: column; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .modal-close { position: absolute; top: 10px; left: 15px; font-size: 14px; font-weight: bold; cursor: pointer; color: #fff; z-index: 10; background: rgba(0,0,0,0.6); padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; justify-content: center; gap: 5px; border: 1px solid #555; }
+        .modal-cover-photo { width: 100%; height: 140px; background-size: cover; background-position: center; border-bottom: 2px solid var(--primary); flex-shrink: 0; }
+        .modal-body { padding: 25px; overflow-y: auto; flex: 1 1 auto; -webkit-overflow-scrolling: touch; }
+
+        /* ZÁMEK */
+        .lock-screen { text-align: center; padding: 40px 20px; background: rgba(0,0,0,0.6); border-radius: 12px; border: 1px solid var(--primary); margin-top: 20px; }
+        .lock-screen i { font-size: 50px; color: var(--primary); margin-bottom: 15px; }
+        
+        /* TLAČÍTKA A VSTUPY */
+        .auth-container { padding: 30px; display: flex; flex-direction: column; justify-content: center; flex: 1; background: rgba(0,0,0,0.6); border-radius: 15px; margin: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .btn { padding: 15px; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; margin-bottom: 12px; cursor: pointer; text-align: center; color: #fff; width: 100%; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: #000; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-        .input-dark { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 5px; margin-bottom: 10px; }
-        .card { background: #151515; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid var(--primary); cursor: pointer; }
-        .bottom-nav { display: flex; background: #111; padding: 10px; border-top: 1px solid #333; }
-        .nav-item { flex: 1; text-align: center; font-size: 11px; cursor: pointer; color: #888; }
-        .nav-item.active { color: var(--primary); }
-        .lock-screen { text-align: center; padding: 40px 20px; background: #151515; border-radius: 12px; border: 1px solid var(--primary); margin-top: 20px; }
+        .btn-locked { background: #333; color: var(--text-muted); border: 1px solid #555; }
+        .btn-success { background: var(--success); color: #000; }
+        .btn-premium { background: linear-gradient(45deg, #8e44ad, #9b59b6); color: white; border: none; box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4); }
+        
+        .btn-apple { background: #000; border: 1px solid #444; }
+        .btn-google { background: #ffffff; color: #333; }
+        .btn-whatsapp { background: #25D366; color: #000; }
+
+        .input-dark { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.6); color: #fff; margin-bottom: 15px; font-size: 16px; color-scheme: dark; }
+        select.input-dark { appearance: none; }
+        input[type="range"] { width: 100%; accent-color: var(--primary); margin: 15px 0; }
+        
+        .form-section { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid var(--glass-border); margin-bottom: 20px; }
+        .form-section h3 { border-bottom: 1px solid var(--primary); padding-bottom: 8px; margin-bottom: 15px; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+
+        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .check-item { display: flex; align-items: center; gap: 8px; font-size: 14px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; cursor: pointer; }
+        input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-color: var(--primary); }
+        .flex-row { display: flex; gap: 10px; align-items: center; }
+
+        /* KARTY */
+        .card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; transition: 0.2s; }
+        .card:hover { border-color: var(--primary); background: rgba(255,255,255,0.12); }
+        .card-img { width: calc(100% + 30px); height: 150px; margin: -15px -15px 15px -15px; object-fit: cover; border-bottom: 1px solid var(--primary); border-top-left-radius: 12px; border-top-right-radius: 12px; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .comp-name { font-size: 18px; font-weight: bold; color: var(--primary); display: inline-flex; align-items: center; gap: 5px; text-decoration: underline; }
+        .route-box { background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .tag-grid { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .tag { background: #222; padding: 5px 10px; border-radius: 4px; font-size: 12px; color: var(--text-muted); border: 1px solid #444; }
+        .tag.alert { border-color: var(--primary); color: var(--primary); }
+        .card-price { color: var(--success); font-weight: bold; font-size: 20px; text-align: right; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+
+        /* AVATAR */
+        .avatar-upload { position: relative; width: 80px; height: 80px; margin: 0 auto 15px auto; cursor: pointer; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); }
+        .avatar-edit { position: absolute; bottom: 0; right: 0; background: var(--primary); color: #000; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; border: 2px solid #000; }
+
+        /* SPODNÍ NAVIGACE */
+        .bottom-nav { display: flex; background: rgba(0,0,0,0.95); border-top: 1px solid var(--glass-border); padding-bottom: env(safe-area-inset-bottom); z-index: 10; }
+        .nav-item { flex: 1; padding: 12px 0; text-align: center; color: var(--text-muted); cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); box-shadow: inset 0 3px 0 var(--primary); background: rgba(243, 156, 18, 0.1); }
+        
+        /* NAČÍTACÍ BUDÍK */
+        #screen-loading { display: none; justify-content: center; align-items: center; flex-direction: column; background: #050505; z-index: 100; }
+        #screen-loading.active { display: flex; }
+        .gauge-container { position: relative; width: 160px; height: 80px; overflow: hidden; margin-bottom: 20px; }
+        .gauge-background { width: 160px; height: 160px; border-radius: 50%; border: 12px solid #222; border-top-color: var(--primary); border-right-color: var(--primary); position: absolute; top: 0; left: 0; transform: rotate(-45deg); }
+        .gauge-needle { width: 80px; height: 4px; background: #fff; position: absolute; bottom: 0; left: 0; transform-origin: right center; transform: rotate(0deg); animation: revUp 2s ease-in-out forwards; }
+        @keyframes revUp { 0% { transform: rotate(0deg); } 50% { transform: rotate(160deg); } 70% { transform: rotate(140deg); } 100% { transform: rotate(180deg); } }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div id="scr-load" class="screen active" style="justify-content:center;text-align:center"><h1>STŘÍDAČ</h1><p>Načítám...</p></div>
 
-    <div id="scr-login" class="screen"><div class="header">Přihlášení</div>
-        <div class="content"><input class="input-dark" placeholder="E-mail"><input class="input-dark" placeholder="Heslo"><button class="btn" onclick="navigate('scr-role')">Přihlásit se</button></div>
+    <div class="header" id="main-header" style="display: none;">
+        <div class="back-btn" onclick="goBack()" id="btn-back"><i class="fa-solid fa-chevron-left"></i> Zpět</div>
+        <div class="header-title" id="header-title">STŘÍDAČ</div>
+        <div class="header-right"></div>
     </div>
+    <div class="trial-banner" id="trial-banner" onclick="navigate('screen-paywall')">✅ 14 dní Verze zdarma aktivní</div>
 
-    <div id="scr-role" class="screen"><div class="header">Výběr role</div>
-        <div class="content"><button class="btn" onclick="setRole('driver')">Jsem Řidič</button><button class="btn" onclick="setRole('company')">Jsem Firma</button></div>
-    </div>
-
-    <div id="scr-onboarding" class="screen"><div class="header">Aktivace tarifu</div>
-        <div class="content">
-            <h3>Vyberte verzi</h3>
-            <div class="card" onclick="startTrial()"><h4>14 dní zdarma</h4><p>Základní přístup.</p></div>
-            <div class="card" style="border-left-color:var(--premium)" onclick="navigate('scr-checkout')"><h4>Premium</h4><p>Neomezené možnosti.</p></div>
+    <div class="modal-overlay" id="profile-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-close" onclick="closeModal(true)"><i class="fa-solid fa-xmark"></i> Zavřít</div>
+            <div id="modal-cover" class="modal-cover-photo"></div>
+            <div class="modal-body" id="modal-body-content"></div>
         </div>
     </div>
 
-    <div id="scr-app" class="screen">
-        <div class="header">
-            <div onclick="goBack()" style="cursor:pointer;"><i class="fa fa-arrow-left"></i> Zpět</div>
-            <div id="h-title" style="flex:1;text-align:center;font-weight:bold">STŘÍDAČ</div>
-        </div>
-        <div class="content" id="app-cont"></div>
-        <div class="bottom-nav" id="nav-bar"></div>
+    <div id="screen-loading" class="screen active">
+        <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
+        <div style="font-size: 24px; font-weight: bold; letter-spacing: 3px; color: var(--primary); text-transform: uppercase;">STŘÍDAČ</div>
     </div>
 
-    <div id="scr-checkout" class="screen"><div class="header">Platební brána</div>
-        <div class="content">
-            <input class="input-dark" placeholder="Číslo karty">
-            <button class="btn" onclick="processPayment()">Zaplatit Premium</button>
+    <div id="screen-login" class="screen">
+        <div class="bg-overlay"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div class="auth-container">
+                <h1 style="text-align: center; margin-bottom: 10px; color: var(--primary);">Vítejte v aplikaci</h1>
+                <p style="text-align: center; margin-bottom: 25px; color: var(--text-light);">Najděte střídače nebo jízdu.</p>
+                <input type="email" class="input-dark" placeholder="Váš E-mail">
+                <input type="password" class="input-dark" placeholder="Heslo">
+                <button class="btn btn-primary" onclick="navigate('screen-role')"><i class="fa-solid fa-envelope"></i> Přihlásit se</button>
+                <div style="text-align: center; margin: 15px 0; color: #ccc; font-size: 12px; font-weight: bold;">RYCHLÉ PŘIHLÁŠENÍ</div>
+                <button class="btn btn-whatsapp" onclick="navigate('screen-role')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-google" onclick="navigate('screen-role')"><i class="fa-brands fa-google"></i> Google</button>
+                    <button class="btn btn-apple" onclick="navigate('screen-role')"><i class="fa-brands fa-apple"></i> Apple</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div id="screen-role" class="screen">
+        <div class="bg-overlay"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div class="auth-container">
+                <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Kdo jste?</h1>
+                <button class="btn btn-primary" style="padding: 20px; font-size: 18px;" onclick="chooseRole('driver')"><i class="fa-solid fa-truck-fast"></i> JSEM ŘIDIČ</button>
+                <button class="btn btn-outline" style="padding: 20px; font-size: 18px; color: #fff; border-color: #fff;" onclick="chooseRole('company')"><i class="fa-solid fa-building"></i> JSEM FIRMA</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-onboarding" class="screen">
+        <div class="bg-overlay"></div>
+        <div class="content" style="display: flex; flex-direction: column; justify-content: center; z-index: 2;">
+            <h1 style="text-align: center; color: var(--primary); margin-bottom: 10px;">Vyberte si plán</h1>
+            <div class="card" style="border-color: var(--success);" onclick="startTrial()">
+                <h3 style="color: var(--success); text-align: center; font-size: 18px;">14 dní na zkoušku</h3>
+                <div style="font-size: 32px; font-weight: bold; text-align: center; margin: 10px 0; color: #fff;">Zdarma</div>
+                <button class="btn btn-success" style="margin-top: 15px;"><i class="fa-solid fa-play"></i> Spustit zdarma</button>
+            </div>
+            <div class="card" style="border-color: var(--premium);" onclick="navigate('screen-checkout')">
+                <h3 style="color: var(--premium); text-align: center; font-size: 18px;">Premium účet</h3>
+                <div style="font-size: 32px; font-weight: bold; text-align: center; margin: 10px 0; color: #fff;" id="onboarding-price">...</div>
+                <ul style="font-size: 14px; color: #ccc; list-style: none; padding: 0; line-height: 1.6;" id="onboarding-benefits"></ul>
+                <button class="btn btn-premium" style="margin-top: 15px;"><i class="fa-solid fa-star"></i> Koupit Premium</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-app" class="screen">
+        <div class="content" style="padding: 0;">
+            
+            <div id="tab-driver-jobs" class="tab-content" style="padding: 20px;">
+                <div id="driver-jobs-locked" class="lock-screen" style="display: none;">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <h3>Profil není kompletní</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Abyste mohl procházet jízdy a reagovat, vyplňte svůj profil.</p>
+                    <button class="btn btn-primary" onclick="switchTab('driver-profile', 1)">Přejít do Profilu</button>
+                </div>
+                
+                <div id="driver-jobs-content">
+                    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--primary);">
+                        <div style="font-size: 12px; color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-filter"></i> FILTROVAT INZERÁTY</div>
+                        <input type="text" id="filter-city" class="input-dark" style="margin-bottom: 10px; padding: 10px;" value="Olomouc" oninput="renderJobs()" placeholder="Město...">
+                        
+                        <select class="input-dark" id="filter-vehicle-type" style="margin-bottom: 0; padding: 10px;" onchange="renderJobs()">
+                            <option value="Vše">Všechna vozidla</option>
+                            <option value="Tahač+Návěs">Tahače a Návěsy (C+E)</option>
+                            <option value="Sólo">Sólo vozy (C)</option>
+                            <option value="Dodávka">Dodávky (B)</option>
+                            <option value="Autobus">Autobusy (D)</option>
+                        </select>
+
+                        <div style="margin-top: 15px;">
+                            <label style="color: var(--text-light); font-size: 13px;">Okruh: <span id="filter-radius-val" style="font-weight: bold; color: var(--primary);">100 km</span></label>
+                            <input type="range" id="filter-radius" min="0" max="500" value="100" oninput="document.getElementById('filter-radius-val').innerText = this.value + ' km'; renderJobs();">
+                        </div>
+                    </div>
+                    <div id="jobs-list"></div>
+                </div>
+            </div>
+
+            <div id="tab-driver-profile" class="tab-content" style="padding: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <input type="file" id="driver-avatar-upload" style="display:none;" accept="image/*">
+                    <div class="avatar-upload" onclick="document.getElementById('driver-avatar-upload').click()">
+                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop" class="avatar-img" alt="Profil">
+                        <div class="avatar-edit"><i class="fa-solid fa-camera"></i></div>
+                    </div>
+                    <h2 style="color: #fff;">Jan Koukal</h2>
+                    <div style="color: #f1c40f; font-size: 13px;"><i class="fa-solid fa-star"></i> 4.9 | Scania / Truck fan</div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Základní údaje</h3>
+                    <input type="text" class="input-dark" value="Jan Koukal" placeholder="Jméno">
+                    <input type="text" class="input-dark" value="+420 777 123 456" placeholder="Telefon">
+                </div>
+
+                <div class="form-section">
+                    <h3>Praxe a Oprávnění</h3>
+                    <select class="input-dark">
+                        <option>Praxe: méně než 1 rok</option>
+                        <option>Praxe: 1-5 let</option>
+                        <option selected>Praxe: 5+ let</option>
+                    </select>
+                    
+                    <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Řidičská oprávnění:</h4>
+                    <div class="check-grid">
+                        <label class="check-item"><input type="checkbox" checked> B (Dodávka)</label>
+                        <label class="check-item"><input type="checkbox" checked> C (Sólo)</label>
+                        <label class="check-item"><input type="checkbox" checked> C+E (Souprava)</label>
+                        <label class="check-item"><input type="checkbox"> D (Autobus)</label>
+                    </div>
+
+                    <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Zkušenosti s typem vozidla / návěsu:</h4>
+                    <div class="check-grid">
+                        <label class="check-item"><input type="checkbox" checked> Plachta/Mega</label>
+                        <label class="check-item"><input type="checkbox"> Frigo</label>
+                        <label class="check-item"><input type="checkbox"> Sklápěč</label>
+                        <label class="check-item"><input type="checkbox"> ADR</label>
+                        <label class="check-item"><input type="checkbox"> Cisterna</label>
+                        <label class="check-item"><input type="checkbox"> Lesovůz</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveProfile('driver')"><i class="fa-solid fa-floppy-disk"></i> Uložit Profil</button>
+            </div>
+
+            <div id="tab-company-add" class="tab-content" style="padding: 20px;">
+                <div id="company-jobs-locked" class="lock-screen" style="display: none;">
+                    <i class="fa-solid fa-building-circle-exclamation"></i>
+                    <h3>Firemní profil chybí</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Vyplňte prosím údaje o firmě.</p>
+                    <button class="btn btn-primary" onclick="switchTab('company-profile', 2)">Profil Firmy</button>
+                </div>
+
+                <div id="company-jobs-content">
+                    <div class="form-section">
+                        <h3>Vytvořit inzerát</h3>
+                        <select class="input-dark">
+                            <option>Záskok (Nemoc/Dovolená)</option>
+                            <option>Jednorázovka (Kšeft)</option>
+                            <option>Dlouhodobá spolupráce (HPP/IČO)</option>
+                        </select>
+
+                        <input type="text" class="input-dark" placeholder="Město výjezdu (Např. Olomouc)">
+                        <input type="text" class="input-dark" placeholder="Kam se jede (Destinace / MKD / Vnitrostátní)">
+
+                        <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Co hledáte?</h4>
+                        <select class="input-dark">
+                            <option>Tahač + Návěs (C+E)</option>
+                            <option>Sólo (C)</option>
+                            <option>Dodávka (B)</option>
+                            <option>Autobus (D)</option>
+                        </select>
+
+                        <select class="input-dark">
+                            <option>Plachta / Mega</option>
+                            <option>Frigo</option>
+                            <option>Sklápěč</option>
+                            <option>Osobní přeprava (Bus/Van)</option>
+                            <option>Jiné / Nezáleží</option>
+                        </select>
+
+                        <h4 style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Odměna a podmínky</h4>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" class="input-dark" placeholder="Částka" style="flex: 2;">
+                            <select class="input-dark" style="flex: 1; padding: 10px;">
+                                <option>Kč</option>
+                                <option>EUR</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <select class="input-dark" style="flex: 1; padding: 10px;">
+                                <option>Za den</option>
+                                <option>Za točku (turnus)</option>
+                                <option>Za měsíc</option>
+                                <option>Za jízdu/zakázku</option>
+                            </select>
+                            <select class="input-dark" style="flex: 1; padding: 10px;">
+                                <option>Čistého</option>
+                                <option>Hrubého</option>
+                                <option>Faktura (IČO)</option>
+                            </select>
+                        </div>
+
+                        <div id="publish-btn-container" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-company-drivers" class="tab-content" style="padding: 20px;">
+                <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--primary);">
+                    <div style="font-size: 12px; color: var(--primary); margin-bottom: 5px;"><i class="fa-solid fa-users-viewfinder"></i> HLEDAT STŘÍDAČE</div>
+                    <input type="text" id="comp-filter-city" class="input-dark" style="margin-bottom: 10px; padding: 10px;" value="Olomouc" oninput="renderDriversCatalog()">
+                    
+                    <select class="input-dark" id="comp-filter-req" style="margin-bottom: 0; padding: 10px;" onchange="renderDriversCatalog()">
+                        <option value="Vše">Všechna oprávnění</option>
+                        <option value="C+E">Hledám: C+E (Souprava)</option>
+                        <option value="C">Hledám: C (Sólo)</option>
+                        <option value="B">Hledám: B (Dodávka)</option>
+                        <option value="D">Hledám: D (Autobus)</option>
+                    </select>
+
+                    <div style="margin-top: 15px;">
+                        <label style="color: var(--text-light); font-size: 13px;">Hledat v okruhu: <span id="comp-filter-radius-val" style="font-weight: bold; color: var(--primary);">100 km</span></label>
+                        <input type="range" id="comp-filter-radius" min="0" max="500" value="100" oninput="document.getElementById('comp-filter-radius-val').innerText = this.value + ' km'; renderDriversCatalog();">
+                    </div>
+                </div>
+                <div id="drivers-catalog-list"></div>
+            </div>
+
+            <div id="tab-company-profile" class="tab-content" style="padding: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="avatar-upload">
+                        <img src="https://images.unsplash.com/photo-1519003722824-194d4455a60c?q=80&w=200&auto=format&fit=crop" class="avatar-img" alt="Logo">
+                    </div>
+                    <h2 style="color: #fff;">Vaše Firma</h2>
+                </div>
+
+                <div class="form-section">
+                    <h3>Údaje o firmě</h3>
+                    <input type="text" class="input-dark" value="Control Point s.r.o." placeholder="Název">
+                    <input type="text" class="input-dark" value="CZ12345678" placeholder="IČO">
+                    <input type="text" class="input-dark" value="Olomouc" placeholder="Sídlo">
+                    <input type="text" class="input-dark" value="+420 800 123 456" placeholder="Telefon pro řidiče">
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveProfile('company')"><i class="fa-solid fa-floppy-disk"></i> Uložit Profil</button>
+            </div>
+
+        </div>
+        <div class="bottom-nav" id="bottom-navigation"></div>
+    </div>
+
+    <div id="screen-paywall" class="screen">
+        <div class="content" style="padding-top: 40px;">
+            <div style="text-align: center; font-size: 50px; color: var(--primary); margin-bottom: 10px;"><i class="fa-solid fa-crown"></i></div>
+            <h2 style="text-align: center; margin-bottom: 10px; color: var(--primary);">Prémiový účet</h2>
+            
+            <div class="paywall-card" id="paywall-driver" style="background: rgba(255,255,255,0.05); border: 1px solid var(--premium); border-radius: 12px; padding: 25px; display: none;">
+                <h3 style="text-align: center;">Premium Řidič</h3>
+                <div style="font-size: 38px; font-weight: bold; color: var(--premium); margin: 15px 0; text-align: center;">79 Kč <span style="font-size: 14px; color: gray;">/ měsíc</span></div>
+            </div>
+
+            <div class="paywall-card" id="paywall-company" style="background: rgba(255,255,255,0.05); border: 1px solid var(--premium); border-radius: 12px; padding: 25px; display: none;">
+                <h3 style="text-align: center;">Premium Firma</h3>
+                <div style="font-size: 38px; font-weight: bold; color: var(--premium); margin: 15px 0; text-align: center;">990 Kč <span style="font-size: 14px; color: gray;">/ měsíc</span></div>
+            </div>
+
+            <button class="btn btn-primary" style="margin-top: 30px;" onclick="navigate('screen-checkout')"><i class="fa-regular fa-credit-card"></i> Přejít k platbě</button>
+            <button class="btn btn-outline" style="border: none; color: #888;" onclick="goBack()">Zatím ne</button>
+        </div>
+    </div>
+
+    <div id="screen-checkout" class="screen">
+        <div class="content" style="padding-top: 40px;">
+            <div style="background: #1a1b25; border-radius: 12px; padding: 20px; border: 1px solid #2d303e;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    <span style="font-weight: bold; font-size: 18px;">Platba</span>
+                </div>
+                <button class="btn btn-primary" style="margin-top: 25px;" onclick="processPayment(this)">Simulovat Zaplacení</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div class="modal" id="modal"><div class="modal-cont"><div class="modal-body" id="modal-body"></div><button class="btn" onclick="closeM()">Zavřít</button></div></div>
-
 <script>
-    let state={role:'',premium:false,profileDone:false};
-    const companies={c1:{name:'Agro Trans',ico:'123',sidlo:'Olomouc',fleet:'15 Scania',phone:'+420 777 123 456',desc:'Doprava sypkých hmot.'}};
-    const jobs=[{id:1,compId:'c1',from:'Olomouc',to:'Zlín',price:'3500',type:'Záskok',unit:'den'}];
-    const drivers=[{id:'d1',name:'Jan Koukal',loc:'Olomouc',exp:'8 let',req:'C+E, ADR',phone:'+420 777 999'}];
+    let isTrialActive = true; 
+    let isPremium = false; 
+    let currentRole = ''; 
+    let historyStack = []; 
+    let isProfileComplete = false; 
 
-    function navigate(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(s).classList.add('active')}
-    function goBack(){history.back()}
-    function setRole(r){state.role=r;navigate('scr-onboarding')}
-    function startTrial(){state.premium=false;enterApp()}
-    function processPayment(){state.premium=true;alert('Zaplaceno!');enterApp()}
+    // MAPOVÁ DATA (pro ukázku simulace vzdáleností)
+    const cityMap = {
+        "praha": {x: 0, y: 0},
+        "olomouc": {x: 210, y: 0},
+        "šumperk": {x: 190, y: 30},
+        "ostrava": {x: 270, y: 20},
+        "brno": {x: 150, y: -50}
+    };
 
-    function enterApp(){
-        navigate('scr-app');
-        const n=document.getElementById('nav-bar');
-        if(state.role=='driver'){
-            n.innerHTML=`<div class="nav-item" onclick="renderJobs()">Jízdy</div><div class="nav-item" onclick="renderProfile()">Profil</div>`;
-            renderJobs();
+    function getDistance(cityA, cityB) {
+        let a = cityA.toLowerCase().trim();
+        let b = cityB.toLowerCase().trim();
+        if(a === b) return 0;
+        if(cityMap[a] && cityMap[b]) return Math.round(Math.sqrt(Math.pow(cityMap[b].x - cityMap[a].x, 2) + Math.pow(cityMap[b].y - cityMap[a].y, 2)));
+        return 50; // defaultní hodnota pokud město není ve slovníku
+    }
+
+    // DATABÁZE (Obohacená o nové parametry mezd a licencí)
+    const companiesDB = {
+        'c1': { name: 'Logistics CZ', ico: 'CZ123', sidlo: 'Olomouc', rating: '4.9', phone: '+420 777 123 456', desc: 'Dopravce zaměřený na vnitro a AT.', img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?q=80&w=600&auto=format&fit=crop' },
+        'c2': { name: 'Dřevo Transport', ico: 'CZ876', sidlo: 'Šumperk', rating: '4.5', phone: '+420 600 111 222', desc: 'Jezdíme pilu Paskov.', img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=600&auto=format&fit=crop' },
+        'c3': { name: 'Speedy Express', ico: 'CZ999', sidlo: 'Brno', rating: '4.8', phone: '+420 800 000 000', desc: 'Rozvozy balíků dodávkami.', img: 'https://images.unsplash.com/photo-1586191552066-f52fd92fb4c2?q=80&w=600&auto=format&fit=crop' }
+    };
+
+    const driversDB = [
+        { id: 'd1', name: 'Jan Koukal', rating: '4.9', exp: '8 let', praxe: 'Plachta, Sklápěč', loc: 'Olomouc', req: ['C+E', 'C', 'B'], avail: 'Ihned', phone: '+420 777 123 456', img: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop' },
+        { id: 'd2', name: 'Petr Novák', rating: '4.5', exp: '2 roky', praxe: 'Dodávka', loc: 'Ostrava', req: ['B'], avail: 'Víkendy', phone: '+420 600 000 000', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop' },
+        { id: 'd3', name: 'Karel Říha', rating: '4.7', exp: '15 let', praxe: 'Zájezdový Bus', loc: 'Praha', req: ['D', 'B'], avail: 'Na dohodu', phone: '+420 777 888 999', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop' }
+    ];
+
+    let jobsData = [
+        { id: 1, compId: 'c1', type: 'Záskok (Nemoc)', from: 'Olomouc', to: 'Rakousko a zpět', vehicle: 'Tahač+Návěs', body: 'Plachta', req: 'C+E', dateFrom: '20.06.', dateTo: '25.06.', price: '3 500 Kč', priceFreq: 'za den (čistého)' },
+        { id: 2, compId: 'c2', type: 'Jednorázovka', from: 'Šumperk', to: 'Paskov', vehicle: 'Tahač+Návěs', body: 'Lesovůz', req: 'C+E', dateFrom: 'Ihned', dateTo: 'Večer', price: '5 000 Kč', priceFreq: 'za točku (faktura)' },
+        { id: 3, compId: 'c3', type: 'Dlouhodobá', from: 'Brno', to: 'Rozvoz Morava', vehicle: 'Dodávka', body: 'Skříň', req: 'B', dateFrom: 'Od 1.7.', dateTo: 'Neurčito', price: '45 000 Kč', priceFreq: 'za měsíc (hrubého)' }
+    ];
+
+    // NAVIGACE
+    function navigate(scr, isBack = false) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(scr).classList.add('active');
+        
+        if(!isBack && historyStack[historyStack.length-1] !== scr && scr !== 'screen-checkout') {
+            historyStack.push(scr);
+        }
+        
+        const head = document.getElementById('main-header');
+        const btn = document.getElementById('btn-back');
+        const ban = document.getElementById('trial-banner');
+        
+        if(scr.includes('loading') || scr.includes('login') || scr.includes('role')) { 
+            head.style.display = 'none'; ban.style.display = 'none'; 
         } else {
-            n.innerHTML=`<div class="nav-item" onclick="renderAdd()">Zadat</div><div class="nav-item" onclick="renderDrivers()">Řidiči</div>`;
-            renderAdd();
+            head.style.display = 'flex';
+            btn.style.visibility = (scr === 'screen-app' || scr === 'screen-onboarding') ? 'hidden' : 'visible';
+            if(scr === 'screen-app' && !isPremium) { 
+                ban.style.display = 'block';
+                ban.className = isTrialActive ? 'trial-banner' : 'trial-banner expired'; 
+                ban.innerText = isTrialActive ? '✅ Verze zdarma aktivní' : '❌ Verze zdarma vypršela'; 
+            } else { ban.style.display = 'none'; }
         }
     }
 
-    function renderJobs(){
-        const c=document.getElementById('app-cont');
-        c.innerHTML='<h2>Volné jízdy</h2><input class="input-dark" placeholder="Město...">';
-        jobs.forEach(j=>{
-            c.innerHTML+=`<div class="card" onclick="showDetail(${j.id})"><h3>${companies[j.compId].name}</h3><p>${j.from} ➔ ${j.to}</p><b>${j.price} Kč / ${j.unit}</b></div>`;
+    function goBack() { 
+        if(historyStack.length > 1) { historyStack.pop(); navigate(historyStack[historyStack.length-1], true); } 
+    }
+
+    function chooseRole(r) {
+        currentRole = r;
+        document.getElementById('paywall-driver').style.display = r === 'driver' ? 'block' : 'none';
+        document.getElementById('paywall-company').style.display = r === 'company' ? 'block' : 'none';
+        navigate('screen-onboarding');
+    }
+
+    function startTrial() { isTrialActive = true; isPremium = false; enterApp(); }
+
+    function enterApp() {
+        const nav = document.getElementById('bottom-navigation');
+        if(currentRole === 'driver') { 
+            nav.innerHTML = `<div class="nav-item active" onclick="switchTab('driver-jobs',0)"><i class="fa-solid fa-map-location-dot"></i> Inzeráty</div><div class="nav-item" onclick="switchTab('driver-profile',1)"><i class="fa-solid fa-user"></i> Profil</div>`;
+            switchTab('driver-jobs',0); 
+        } else { 
+            nav.innerHTML = `<div class="nav-item active" onclick="switchTab('company-add',0)"><i class="fa-solid fa-plus-circle"></i> Zadat kšeft</div><div class="nav-item" onclick="switchTab('company-drivers',1)"><i class="fa-solid fa-users"></i> Střídači</div><div class="nav-item" onclick="switchTab('company-profile',2)"><i class="fa-solid fa-building"></i> Firma</div>`;
+            switchTab('company-add',0); 
+        }
+        navigate('screen-app');
+    }
+
+    function switchTab(id, idx) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
+        document.getElementById('tab-'+id).classList.add('active');
+        const navs = document.querySelectorAll('.nav-item'); 
+        navs.forEach(n => n.classList.remove('active')); 
+        if(navs[idx]) navs[idx].classList.add('active');
+        
+        if(id === 'driver-jobs') { 
+            if(!isProfileComplete) { document.getElementById('driver-jobs-locked').style.display = 'block'; document.getElementById('driver-jobs-content').style.display = 'none'; } 
+            else { document.getElementById('driver-jobs-locked').style.display = 'none'; document.getElementById('driver-jobs-content').style.display = 'block'; renderJobs(); } 
+        }
+        if(id === 'company-add') { 
+            if(!isProfileComplete) { document.getElementById('company-jobs-locked').style.display = 'block'; document.getElementById('company-jobs-content').style.display = 'none'; } 
+            else { document.getElementById('company-jobs-locked').style.display = 'none'; document.getElementById('company-jobs-content').style.display = 'block'; renderPublish(); } 
+        }
+        if(id === 'company-drivers') renderDriversCatalog();
+    }
+
+    function saveProfile(t) { 
+        isProfileComplete = true; 
+        alert('✅ Data byla úspěšně uložena.');
+        // Oprava záseku: Automaticky přepne uživatele do dashboardu a zobrazí odemčený obsah
+        switchTab(t === 'driver' ? 'driver-jobs' : 'company-add', 0); 
+    }
+
+    function openModal(h, bg) { 
+        const c = document.getElementById('modal-cover');
+        if(bg) { c.style.display = 'block'; c.style.backgroundImage = `url('${bg}')`; } else { c.style.display = 'none'; } 
+        document.getElementById('modal-body-content').innerHTML = h; 
+        document.getElementById('profile-modal').classList.add('active');
+    }
+    
+    function closeModal(e) { 
+        if(e === true || e.target.id === 'profile-modal') { document.getElementById('profile-modal').classList.remove('active'); }
+    }
+
+    function applyActionJob() {
+        alert('Firma obdržela váš zájem. Brzy se ozvou!');
+        closeModal(true); // Oprava záseku
+    }
+
+    function applyActionDriver() {
+        alert('Nabídka odeslána střídači!');
+        closeModal(true); // Oprava záseku
+    }
+
+    function renderJobs() {
+        const cont = document.getElementById('jobs-list');
+        const city = document.getElementById('filter-city').value;
+        const rad = parseInt(document.getElementById('filter-radius').value);
+        const vehicleFilter = document.getElementById('filter-vehicle-type').value;
+
+        cont.innerHTML = '';
+        jobsData.forEach(j => {
+            const dist = getDistance(city, j.from); 
+            if(dist > rad) return; 
+            if(vehicleFilter !== 'Vše' && j.vehicle !== vehicleFilter) return; // Filtruje vozidlo
+
+            const c = companiesDB[j.compId];
+            cont.innerHTML += `
+                <div class="card" onclick="showJobDetail(${j.id})">
+                    <img src="${c.img}" class="card-img">
+                    <div class="card-header">
+                        <div class="comp-name"><i class="fa-solid fa-building"></i> ${c.name}</div>
+                        <span style="color:var(--text-muted);font-size:12px;">📍 +${dist} km</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--primary);font-weight:bold;margin-bottom:5px;">${j.type}</div>
+                    <div class="route-box">
+                        <div><span style="color:var(--primary);">🅰️</span> ${j.from}</div>
+                        <div style="color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div><span style="color:var(--danger);">🅱️</span> ${j.to}</div>
+                    </div>
+                    <div class="tag-grid">
+                        <span class="tag"><i class="fa-solid fa-truck"></i> ${j.vehicle} (${j.body})</span>
+                        <span class="tag alert">🪪 ${j.req}</span>
+                    </div>
+                    <div class="card-price">${j.price} <span style="font-size: 12px; font-weight: normal; color: var(--text-muted); display: block;">${j.priceFreq}</span></div>
+                    <div style="text-align:center;margin-top:10px;color:var(--text-muted);font-size:12px;">Klikněte pro detail</div>
+                </div>`;
         });
     }
 
-    function showDetail(id){
-        const j=jobs.find(x=>x.id==id); const comp=companies[j.compId];
-        const body=`<h2>${comp.name}</h2><p>Sídlo: ${comp.sidlo}</p><p>Flotila: ${comp.fleet}</p><hr><h3>Jízda</h3><p>${j.from}->${j.to}</p><p><b>${j.price} Kč / ${j.unit}</b></p><button class="btn" onclick="alert('Volám: ${comp.phone}')">Zavolat</button>`;
-        openM(body);
+    function showJobDetail(id) {
+        const j = jobsData.find(x => x.id === id);
+        const c = companiesDB[j.compId];
+        let btns = (isTrialActive || isPremium) 
+            ? `<div style="display:flex;gap:10px;margin-top:20px;"><button class="btn btn-outline" style="flex:1;font-size:14px;border-color:var(--success);color:var(--success);" onclick="alert('Zavolat: ${c.phone}')"><i class="fa-solid fa-phone"></i> Volat</button><button class="btn btn-primary" style="flex:1;font-size:14px;" onclick="applyActionJob()"><i class="fa-solid fa-paper-plane"></i> Mám zájem</button></div>` 
+            : `<button class="btn btn-locked" style="margin-top:20px;" onclick="navigate('screen-paywall');closeModal(true);"><i class="fa-solid fa-lock"></i> Odemknout (Premium)</button>`;
+        
+        openModal(`
+            <div style="text-align:center;margin-bottom:15px;"><h2 style="color:var(--primary);">${c.name}</h2><div style="color:#aaa;font-size:12px;">IČO: ${c.ico}</div></div>
+            <div style="background:rgba(255,255,255,.05);padding:15px;border-radius:8px;margin-bottom:15px;">
+                <div style="font-size:14px;color:var(--primary);font-weight:bold;margin-bottom:10px;">DETAIL ZAKÁZKY (${j.type})</div>
+                <div style="font-size:13px;margin-bottom:5px;">Trasa: <strong>${j.from} ➡️ ${j.to}</strong></div>
+                <div style="font-size:13px;margin-top:10px;">Odměna: <strong style="color:var(--success);font-size:16px;">${j.price}</strong><br><span style="color:#aaa;font-size:12px;">${j.priceFreq}</span></div>
+            </div>
+            <div style="font-size:14px;color:#fff;line-height:1.6;">
+                🚛 Typ: <strong>${j.vehicle}</strong><br>
+                📦 Nástavba: <strong>${j.body}</strong><br>
+                🪪 Oprávnění: <strong style="color:var(--primary);">${j.req}</strong>
+            </div>
+            ${btns}`, c.img);
     }
 
-    function renderDrivers(){
-        const c=document.getElementById('app-cont');
-        c.innerHTML='<h2>Řidiči v okolí</h2><input class="input-dark" placeholder="Město...">';
-        drivers.forEach(d=>{
-            c.innerHTML+=`<div class="card" onclick="openM('<h2>${d.name}</h2><p>Praxe: ${d.exp}</p><p>Oprávnění: ${d.req}</p><button class=\\'btn\\' onclick=\\'alert(\\'Posláno\\')\\'>Nabídnout práci</button>')"><h3>${d.name}</h3><p>Lokace: ${d.loc}</p></div>`;
+    function renderDriversCatalog() {
+        const cont = document.getElementById('drivers-catalog-list');
+        cont.innerHTML = '';
+        
+        if(!isTrialActive && !isPremium) { 
+            cont.innerHTML = `<div class="lock-screen"><i class="fa-solid fa-lock" style="color:var(--danger);"></i><h3 style="color:var(--danger);">Katalog uzamčen</h3><button class="btn btn-primary" onclick="navigate('screen-paywall')">Odemknout</button></div>`;
+            return; 
+        }
+        
+        const compCity = document.getElementById('comp-filter-city').value;
+        const maxRad = parseInt(document.getElementById('comp-filter-radius').value);
+        const reqFilter = document.getElementById('comp-filter-req').value;
+
+        let found = false;
+        
+        driversDB.forEach(d => {
+            const dist = getDistance(compCity, d.loc); 
+            if(dist > maxRad) return; 
+            if(reqFilter !== 'Vše' && !d.req.includes(reqFilter)) return; // Filtruje řidiče dle požadované licence
+            
+            found = true;
+            cont.innerHTML += `
+                <div class="card" onclick="showDriverProfile('${d.id}')">
+                    <div style="display:flex;align-items:center;gap:15px;">
+                        <div style="width:60px;height:60px;background-image:url('${d.img}');background-size:cover;border-radius:50%;border:2px solid var(--primary);flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <div style="font-size:16px;font-weight:bold;color:#fff;">${d.name} <span style="font-size:11px;color:var(--text-muted);float:right;">📍 +${dist}km</span></div>
+                            <div style="font-size:12px;color:#f1c40f;"><i class="fa-solid fa-star"></i> ${d.rating} | Praxe: ${d.exp}</div>
+                            <div style="margin-top: 5px; font-size: 11px; color: #fff;">Oprávnění: <strong style="color:var(--primary);">${d.req.join(', ')}</strong></div>
+                        </div>
+                    </div>
+                 </div>`;
         });
+        
+        if(!found) cont.innerHTML = `<div style="text-align:center;color:var(--danger);padding:20px;">Nikdo nenalezen. Zkuste změnit filtr oprávnění nebo zvětšit okruh.</div>`;
     }
 
-    function renderAdd(){
-        document.getElementById('app-cont').innerHTML=`<h2>Zadat inzerát</h2>
-            <select class="input-dark"><option>Kč / den</option><option>Kč / kolečko</option></select>
-            <input class="input-dark" placeholder="Odkud">
-            <input class="input-dark" placeholder="Kam">
-            <button class="btn" onclick="alert('Zveřejněno')">Zveřejnit</button>`;
+    function showDriverProfile(id) {
+        const d = driversDB.find(x => x.id === id);
+        let btn = (isTrialActive || isPremium) 
+            ? `<div style="display:flex;gap:10px;"><button class="btn btn-outline" style="flex:1;font-size:14px;border-color:var(--success);color:var(--success);" onclick="alert('Volám: ${d.phone}')"><i class="fa-solid fa-phone"></i> Zavolat</button><button class="btn btn-primary" style="flex:1;font-size:14px;" onclick="applyActionDriver()"><i class="fa-solid fa-handshake"></i> Nabídnout Jízdu</button></div>` 
+            : `<button class="btn btn-locked" onclick="navigate('screen-paywall');closeModal(true);"><i class="fa-solid fa-lock"></i> Odemknout</button>`;
+        openModal(`
+            <div style="text-align:center;margin-bottom:15px;"><div style="width:90px;height:90px;background-image:url('${d.img}');background-size:cover;border-radius:50%;margin:-60px auto 10px auto;border:4px solid #111;"></div><h2 style="color:var(--primary);">${d.name}</h2><div style="color:#f1c40f;"><i class="fa-solid fa-star"></i> ${d.rating} | Délka praxe: ${d.exp}</div></div>
+            <div style="font-size:14px;margin-bottom:10px;"><strong style="color:var(--text-muted);">Zkušenost s vozidly:</strong> <span style="color:#fff;">${d.praxe}</span></div>
+            <div style="font-size:14px;margin-bottom:20px;"><strong style="color:var(--text-muted);">Skupiny řidičáku:</strong> <span style="color:var(--primary);font-weight:bold;">${d.req.join(', ')}</span></div>
+            ${btn}`, null);
     }
 
-    function renderProfile(){
-        document.getElementById('app-cont').innerHTML=`<h2>Profil</h2>
-            <input class="input-dark" value="Jan Koukal">
-            <input class="input-dark" value="+420 777 123 456">
-            <button class="btn" onclick="state.profileDone=true;alert('Uloženo')">Uložit Profil</button>`;
+    function renderPublish() { 
+        document.getElementById('publish-btn-container').innerHTML = (isTrialActive || isPremium) 
+            ? `<button class="btn btn-primary" onclick="alert('✅ Inzerát vypuštěn do světa!'); switchTab('company-drivers', 1);"><i class="fa-solid fa-upload"></i> Zveřejnit inzerát a najít řidiče</button>` 
+            : `<button class="btn btn-locked" onclick="navigate('screen-paywall')"><i class="fa-solid fa-lock"></i> Zaplatit pro zveřejnění</button>`;
     }
 
-    function openM(html){ document.getElementById('modal-body').innerHTML=html; document.getElementById('modal').classList.add('active'); }
-    function closeM(){ document.getElementById('modal').classList.remove('active'); }
+    function processPayment(btn) { 
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Zpracovávám...';
+        setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Úspěšně zaplaceno!'); enterApp(); }, 1500);
+    }
 
-    // Start
-    setTimeout(()=>{navigate('scr-login')},1000);
+    // START APLIKACE
+    navigate('screen-loading'); setTimeout(() => { navigate('screen-login'); }, 1500);
 </script>
+
 </body>
 </html>
