@@ -1042,7 +1042,7 @@
 </script>
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDa-1rGJQFRxLktmqH2rtPvRkLaGy1latg",
@@ -1057,17 +1057,24 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // Funkce, kterou zavoláš svým tlačítkem v HTML
+  // Funkce, kterou volá tlačítko v HTML
   window.prihlasitGoogle = () => {
     signInWithPopup(auth, new GoogleAuthProvider())
       .then((result) => {
-        console.log("Jsi přihlášen!", result.user.displayName);
-        alert("Vítej, " + result.user.displayName);
+        // Po přihlášení automaticky spustíme tvoji aplikaci
+        enterApp(); 
       })
       .catch((error) => {
-        console.error("Chyba:", error.message);
+        alert("Chyba při přihlášení: " + error.message);
       });
   };
+
+  // Automatické rozpoznání přihlášení (když se vrátíš do appky později)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      enterApp();
+    }
+  });
 </script>
 
 </body>
