@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STŘÍDAČ - Kompletní platforma</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #f39c12; --bg: #050505; --dark: #151515; --text: #fff; --premium: #9b59b6; --success: #2ecc71; --danger: #e74c3c; }
+        body { background: #000; color: var(--text); font-family: sans-serif; height: 100vh; overflow: hidden; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; height: 100%; background: var(--bg); position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .screen { display: none; height: 100%; flex-direction: column; }
+        .screen.active { display: flex; }
+        .header { padding: 15px; background: #111; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 10; }
+        .content { flex: 1; overflow-y: auto; padding: 20px; }
+        /* Modal - Opravené scrollování */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:999; justify-content:center; align-items:center; }
+        .modal.active { display: flex; }
+        .modal-cont { background: #111; width: 90%; height: 85vh; border: 1px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+        /* Prvky */
+        .btn { padding: 14px; background: var(--primary); border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .input-dark { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 5px; margin-bottom: 10px; }
+        .card { background: #151515; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid var(--primary); cursor: pointer; }
+        .bottom-nav { display: flex; background: #111; padding: 10px; border-top: 1px solid #333; }
+        .nav-item { flex: 1; text-align: center; font-size: 11px; cursor: pointer; color: #888; }
+        .nav-item.active { color: var(--primary); }
+        .lock-screen { text-align: center; padding: 40px 20px; background: #151515; border-radius: 12px; border: 1px solid var(--primary); margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="scr-load" class="screen active" style="justify-content:center;text-align:center"><h1>STŘÍDAČ</h1><p>Načítám...</p></div>
+
+    <div id="scr-login" class="screen"><div class="header">Přihlášení</div>
+        <div class="content"><input class="input-dark" placeholder="E-mail"><input class="input-dark" placeholder="Heslo"><button class="btn" onclick="navigate('scr-role')">Přihlásit se</button></div>
+    </div>
+
+    <div id="scr-role" class="screen"><div class="header">Výběr role</div>
+        <div class="content"><button class="btn" onclick="setRole('driver')">Jsem Řidič</button><button class="btn" onclick="setRole('company')">Jsem Firma</button></div>
+    </div>
+
+    <div id="scr-onboarding" class="screen"><div class="header">Aktivace tarifu</div>
+        <div class="content">
+            <h3>Vyberte verzi</h3>
+            <div class="card" onclick="startTrial()"><h4>14 dní zdarma</h4><p>Základní přístup.</p></div>
+            <div class="card" style="border-left-color:var(--premium)" onclick="navigate('scr-checkout')"><h4>Premium</h4><p>Neomezené možnosti.</p></div>
+        </div>
+    </div>
+
+    <div id="scr-app" class="screen">
+        <div class="header">
+            <div onclick="goBack()" style="cursor:pointer;"><i class="fa fa-arrow-left"></i> Zpět</div>
+            <div id="h-title" style="flex:1;text-align:center;font-weight:bold">STŘÍDAČ</div>
+        </div>
+        <div class="content" id="app-cont"></div>
+        <div class="bottom-nav" id="nav-bar"></div>
+    </div>
+
+    <div id="scr-checkout" class="screen"><div class="header">Platební brána</div>
+        <div class="content">
+            <input class="input-dark" placeholder="Číslo karty">
+            <button class="btn" onclick="processPayment()">Zaplatit Premium</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal"><div class="modal-cont"><div class="modal-body" id="modal-body"></div><button class="btn" onclick="closeM()">Zavřít</button></div></div>
+
+<script>
+    let state={role:'',premium:false,profileDone:false};
+    const companies={c1:{name:'Agro Trans',ico:'123',sidlo:'Olomouc',fleet:'15 Scania',phone:'+420 777 123 456',desc:'Doprava sypkých hmot.'}};
+    const jobs=[{id:1,compId:'c1',from:'Olomouc',to:'Zlín',price:'3500',type:'Záskok',unit:'den'}];
+    const drivers=[{id:'d1',name:'Jan Koukal',loc:'Olomouc',exp:'8 let',req:'C+E, ADR',phone:'+420 777 999'}];
+
+    function navigate(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(s).classList.add('active')}
+    function goBack(){history.back()}
+    function setRole(r){state.role=r;navigate('scr-onboarding')}
+    function startTrial(){state.premium=false;enterApp()}
+    function processPayment(){state.premium=true;alert('Zaplaceno!');enterApp()}
+
+    function enterApp(){
+        navigate('scr-app');
+        const n=document.getElementById('nav-bar');
+        if(state.role=='driver'){
+            n.innerHTML=`<div class="nav-item" onclick="renderJobs()">Jízdy</div><div class="nav-item" onclick="renderProfile()">Profil</div>`;
+            renderJobs();
+        } else {
+            n.innerHTML=`<div class="nav-item" onclick="renderAdd()">Zadat</div><div class="nav-item" onclick="renderDrivers()">Řidiči</div>`;
+            renderAdd();
+        }
+    }
+
+    function renderJobs(){
+        const c=document.getElementById('app-cont');
+        c.innerHTML='<h2>Volné jízdy</h2><input class="input-dark" placeholder="Město...">';
+        jobs.forEach(j=>{
+            c.innerHTML+=`<div class="card" onclick="showDetail(${j.id})"><h3>${companies[j.compId].name}</h3><p>${j.from} ➔ ${j.to}</p><b>${j.price} Kč / ${j.unit}</b></div>`;
+        });
+    }
+
+    function showDetail(id){
+        const j=jobs.find(x=>x.id==id); const comp=companies[j.compId];
+        const body=`<h2>${comp.name}</h2><p>Sídlo: ${comp.sidlo}</p><p>Flotila: ${comp.fleet}</p><hr><h3>Jízda</h3><p>${j.from}->${j.to}</p><p><b>${j.price} Kč / ${j.unit}</b></p><button class="btn" onclick="alert('Volám: ${comp.phone}')">Zavolat</button>`;
+        openM(body);
+    }
+
+    function renderDrivers(){
+        const c=document.getElementById('app-cont');
+        c.innerHTML='<h2>Řidiči v okolí</h2><input class="input-dark" placeholder="Město...">';
+        drivers.forEach(d=>{
+            c.innerHTML+=`<div class="card" onclick="openM('<h2>${d.name}</h2><p>Praxe: ${d.exp}</p><p>Oprávnění: ${d.req}</p><button class=\\'btn\\' onclick=\\'alert(\\'Posláno\\')\\'>Nabídnout práci</button>')"><h3>${d.name}</h3><p>Lokace: ${d.loc}</p></div>`;
+        });
+    }
+
+    function renderAdd(){
+        document.getElementById('app-cont').innerHTML=`<h2>Zadat inzerát</h2>
+            <select class="input-dark"><option>Kč / den</option><option>Kč / kolečko</option></select>
+            <input class="input-dark" placeholder="Odkud">
+            <input class="input-dark" placeholder="Kam">
+            <button class="btn" onclick="alert('Zveřejněno')">Zveřejnit</button>`;
+    }
+
+    function renderProfile(){
+        document.getElementById('app-cont').innerHTML=`<h2>Profil</h2>
+            <input class="input-dark" value="Jan Koukal">
+            <input class="input-dark" value="+420 777 123 456">
+            <button class="btn" onclick="state.profileDone=true;alert('Uloženo')">Uložit Profil</button>`;
+    }
+
+    function openM(html){ document.getElementById('modal-body').innerHTML=html; document.getElementById('modal').classList.add('active'); }
+    function closeM(){ document.getElementById('modal').classList.remove('active'); }
+
+    // Start
+    setTimeout(()=>{navigate('scr-login')},1000);
+</script>
+</body>
+</html>
