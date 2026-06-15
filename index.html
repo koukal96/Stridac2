@@ -71,12 +71,13 @@
         }
 
         .app-container {
-            width: 100%; max-width: 480px; height: 100dvh;
-            background: var(--bg-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: flex; flex-direction: column; position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9); overflow: hidden;
-            transition: background 0.3s ease;
-        }
+    width: 100%; max-width: 100%; height: 100dvh;
+    background: var(--bg-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    display: flex; flex-direction: column; position: relative;
+    box-shadow: 0 0 40px rgba(0,0,0,0.9); overflow: hidden;
+    transition: background 0.3s ease;
+}
+
 
         .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow: hidden; position: relative; }
         .screen.active { display: flex; animation: fadeScreen 0.3s ease-in-out; }
