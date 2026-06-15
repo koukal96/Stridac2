@@ -286,33 +286,35 @@
     </div>
 
 
-    <div id="screen-login" class="screen">
+       <div id="screen-login" class="screen">
         <img src="logo_1.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 15px;">
+        
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; width: 100%;">
+            
             <div style="text-align: center; margin-bottom: 10px;">
                 <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
             </div>
-
-            <div class="auth-container" style="padding: 20px; margin: 10px;">
+            
+            <div class="auth-container" style="padding: 30px 20px; width: 100%; max-width: 400px; margin: 0 auto;">
                 <h2 style="text-align: center; color: var(--primary); margin-bottom: 5px;">Vítejte v aplikaci</h2>
                 <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Najděte střídače nebo jízdu.</p>
 
                 <input type="email" id="auth-email" class="input-dark" placeholder="Váš E-mail">
                 <input type="password" id="auth-password" class="input-dark" placeholder="Heslo" style="margin-bottom: 15px;">
-
+                
                 <div style="margin-bottom: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
                     <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-muted); cursor: pointer;">
                         <input type="checkbox" id="legal-consent" style="margin-top: 2px;">
                         <span>Souhlasím s <a href="#" style="color: var(--primary); text-decoration: underline;">Podmínkami</a> a <a href="#" style="color: var(--primary); text-decoration: underline;">GDPR</a>.</span>
                     </label>
                 </div>
-
+                
                 <button class="btn btn-primary" onclick="prihlasitEmailem()"><i class="fa-solid fa-right-to-bracket"></i> Přihlásit se</button>
                 <button class="btn btn-outline" style="border-color: var(--text-muted); color: var(--text-main);" onclick="registrovatEmailem()"><i class="fa-solid fa-user-plus"></i> Vytvořit nový účet</button>
-
+                
                 <div style="text-align: center; margin: 15px 0; color: var(--text-muted); font-size: 11px; font-weight: bold; text-transform: uppercase;">Nebo využijte</div>
-
+                
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-google" id="btn-login-google" style="width: 100%;">
                         <i class="fa-brands fa-google"></i> Přihlásit Googlem
