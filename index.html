@@ -261,6 +261,11 @@
         <div class="gauge-container"><div class="gauge-background"></div><div class="gauge-needle"></div></div>
     </div>
 
+   
+Jan Koukal <jan.koukal96@gmail.com>
+8:53 (před 0 minutami)
+komu: mně
+
     <div id="screen-login" class="screen">
         <img src="logo_1.png" class="corner-logo-mini" alt="logo">
         <div class="bg-overlay"></div>
@@ -268,32 +273,30 @@
             <div style="text-align: center; margin-bottom: 10px;">
                 <img src="logo.png" alt="Logo Střídač" style="width: 350px; max-width: 80%; height: auto; margin: 0 auto; display: block;">
             </div>
-            
+
             <div class="auth-container" style="padding: 20px; margin: 10px;">
                 <h2 style="text-align: center; color: var(--primary); margin-bottom: 5px;">Vítejte v aplikaci</h2>
                 <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Najděte střídače nebo jízdu.</p>
 
-                <input type="email" class="input-dark" placeholder="Váš E-mail" value="test@stridac.cz">
-                <input type="password" class="input-dark" placeholder="Heslo" value="123456" style="margin-bottom: 15px;">
-                
+                <input type="email" id="auth-email" class="input-dark" placeholder="Váš E-mail">
+                <input type="password" id="auth-password" class="input-dark" placeholder="Heslo" style="margin-bottom: 15px;">
+
                 <div style="margin-bottom: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
                     <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-muted); cursor: pointer;">
                         <input type="checkbox" id="legal-consent" style="margin-top: 2px;">
                         <span>Souhlasím s <a href="#" style="color: var(--primary); text-decoration: underline;">Podmínkami</a> a <a href="#" style="color: var(--primary); text-decoration: underline;">GDPR</a>.</span>
                     </label>
                 </div>
-                
-                <button class="btn btn-primary" onclick="tryLogin()"><i class="fa-solid fa-envelope"></i> Přihlásit se</button>
-                
-                <div style="text-align: center; margin: 15px 0; color: var(--text-muted); font-size: 11px; font-weight: bold; text-transform: uppercase;">Rychlé přihlášení</div>
-                
-                <button class="btn btn-whatsapp" onclick="tryLogin()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+
+                <button class="btn btn-primary" onclick="prihlasitEmailem()"><i class="fa-solid fa-right-to-bracket"></i> Přihlásit se</button>
+                <button class="btn btn-outline" style="border-color: var(--text-muted); color: var(--text-main);" onclick="registrovatEmailem()"><i class="fa-solid fa-user-plus"></i> Vytvořit nový účet</button>
+
+                <div style="text-align: center; margin: 15px 0; color: var(--text-muted); font-size: 11px; font-weight: bold; text-transform: uppercase;">Nebo využijte</div>
+
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-google" id="btn-login-google">
+                    <button class="btn btn-google" id="btn-login-google" style="width: 100%;">
                         <i class="fa-brands fa-google"></i> Přihlásit Googlem
                     </button>
-
-                    <button class="btn btn-apple" onclick="tryLogin()"><i class="fa-brands fa-apple"></i> Apple</button>
                 </div>
             </div>
         </div>
@@ -1058,49 +1061,76 @@
     
     function processPayment(btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Platím...'; setTimeout(() => { isPremium = true; isTrialActive = true; alert('🎉 Účet upgradován na PREMIUM!'); document.getElementById('menu-premium-btn').style.display = 'none'; enterApp(); }, 1500); }
 
-    // --- SUPABASE PŘIHLÁŠENÍ ---
+     // --- SUPABASE PŘIHLÁŠENÍ ---
     const supabaseUrl = 'https://ssrhzamqebwakfpaecqb.supabase.co';
-    // Tvůj správný klíč s malým písmenem 'e'
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcmh6YW1xZWJ3YWtmcGFlY3FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NTg0MDIsImV4cCI6MjA5NzAzNDQwMn0.Po1yUURLzRFmqZvsK5MQNvEiyA_0UO5aKDl_MZMvzps';
-    
-    // OPRAVA: Přejmenovali jsme proměnnou na 'klient'
     const klient = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
+    // 1. REGISTRACE PŘES E-MAIL
+    window.registrovatEmailem = async () => {
+        if(!document.getElementById('legal-consent').checked) { alert('Musíte souhlasit s podmínkami.'); return; }
+        const email = document.getElementById('auth-email').value;
+        const password = document.getElementById('auth-password').value;
+        if(!email || !password) { alert('Zadejte E-mail a Heslo.'); return; }
+
+        // Požadavek do Supabase na vytvoření uživatele
+        const { data, error } = await klient.auth.signUp({ email: email, password: password });
+
+        if (error) {
+            alert("Chyba při registraci: " + error.message);
+        } else {
+            alert("Účet byl úspěšně vytvořen! Nyní vás přihlásíme.");
+            // Po úspěšné registraci ho můžeme rovnou přihlásit
+            prihlasitEmailem();
+        }
+    };
+
+    // 2. PŘIHLÁŠENÍ PŘES E-MAIL
+    window.prihlasitEmailem = async () => {
+        if(!document.getElementById('legal-consent').checked) { alert('Musíte souhlasit s podmínkami.'); return; }
+        const email = document.getElementById('auth-email').value;
+        const password = document.getElementById('auth-password').value;
+        if(!email || !password) { alert('Zadejte E-mail a Heslo.'); return; }
+
+        const { data, error } = await klient.auth.signInWithPassword({ email: email, password: password });
+
+        if (error) {
+            alert("Špatný E-mail nebo Heslo.");
+        }
+    };
+
+    // 3. OPRAVENÉ PŘIHLÁŠENÍ GOOGLE (Správný návrat zpět do aplikace)
     document.getElementById('btn-login-google').onclick = async () => {
-        if(!document.getElementById('legal-consent').checked) { 
-            alert('Nejprve musíte souhlasit s podmínkami (zaškrtávátko nad tlačítkem).'); 
-            return; 
-        } 
-        
-        // OPRAVA: Tady používáme 'klient'
+        if(!document.getElementById('legal-consent').checked) { alert('Nejprve musíte souhlasit s podmínkami.'); return; }
+
         const { error } = await klient.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin }
+            options: {
+                // TADY BYLA CHYBA: window.location.href zajistí návrat přesně na tu samou stránku, ze které odcházíš
+                redirectTo: window.location.href
+            }
         });
-        
+
         if (error) { alert("Chyba při přihlášení: " + error.message); }
     };
 
-    // OPRAVA: Tady používáme 'klient'
+    // AUTOMATICKÁ KONTROLA STAVU
     klient.auth.onAuthStateChange((event, session) => {
         if (session) {
             console.log("Přihlášen jako: " + session.user.email);
-            // Zobrazíme obrazovku s výběrem role
             if(document.getElementById('screen-loading').classList.contains('active') || document.getElementById('screen-login').classList.contains('active')) {
                 navigate('screen-role');
             }
         }
     });
 
-    navigate('screen-loading'); 
-    setTimeout(() => { 
+    navigate('screen-loading');
+    setTimeout(() => {
         if(!document.getElementById('screen-role').classList.contains('active')) {
-            navigate('screen-login'); 
+            navigate('screen-login');
         }
     }, 2500);
 </script>
 
 </body>
 </html>
-
-    
