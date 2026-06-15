@@ -194,6 +194,29 @@
         .gauge-background { width: 160px; height: 160px; border-radius: 50%; border: 12px solid #222; border-top-color: var(--primary); border-right-color: var(--primary); position: absolute; top: 0; left: 0; transform: rotate(-45deg); box-shadow: 0 0 20px rgba(243, 156, 18, 0.5); }
         .gauge-needle { width: 80px; height: 4px; background: #fff; position: absolute; bottom: 0; left: 0; transform-origin: right center; transform: rotate(0deg); animation: revUp 2.5s ease-in-out forwards; }
         @keyframes revUp { 0% { transform: rotate(0deg); } 50% { transform: rotate(160deg); } 70% { transform: rotate(140deg); } 100% { transform: rotate(180deg); } }
+            /* VYLEPŠENÍ PRO POČÍTAČE (DESKTOP VERZE) */
+        @media (min-width: 768px) {
+            /* Vycentrování a zúžení hlavního obsahu */
+            .tab-content {
+                max-width: 800px;      
+                margin: 0 auto;        
+                padding: 40px 20px;
+            }
+            /* Zvětšení mezer ve formulářích pro lepší čitelnost */
+            .form-section {
+                padding: 30px;         
+            }
+            /* Odsazení hlavičky (loga a ikon) více od okrajů monitoru */
+            .header {
+                padding: 15px 50px;    
+            }
+            /* Poloviční šířka tlačítek na přihlašovací obrazovce, aby nebyla přes celý monitor */
+            .auth-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
     </style>
 </head>
 <body>
